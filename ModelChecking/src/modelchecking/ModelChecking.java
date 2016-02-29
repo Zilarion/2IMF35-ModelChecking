@@ -16,6 +16,8 @@ public class ModelChecking {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        AldebaranParser a = new AldebaranParser();
+        a.readLTS();
     }
     
 }
