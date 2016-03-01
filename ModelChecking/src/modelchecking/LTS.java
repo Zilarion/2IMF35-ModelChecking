@@ -36,4 +36,13 @@ public class LTS {
         }
         return init + trans + stats + edges;
     }
+    
+    public String toDot() {
+        String edges = "";
+        for (Edge edge : this.edgeList) {
+            edges += edge.startState + " -> " + edge.endState + "[label=" + edge.label + "];\n";
+        }
+        String graph = "digraph G {\n" + edges + "}";
+        return graph;
+    }
 }
