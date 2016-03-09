@@ -29,7 +29,7 @@ public class ModelChecking {
             System.out.println("Please enter uInput: ");
             String s = "";
             try {
-            String s = br.readLine();
+                s = br.readLine();
             } catch (IOException ex) {
                 Logger.getLogger(ModelChecking.class.getName()).log(Level.SEVERE, null, ex);
             }
