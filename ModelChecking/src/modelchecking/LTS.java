@@ -7,19 +7,19 @@ package modelchecking;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 
 /**
  *
  * @author Hein
  */
 public class LTS {
-    public int initialState;
-    public int transitions;
-    public int states;
-    public Set<Edge> edgeSet;
-    public HashMap nodeSet;
-    
+
+    private final int initialState;
+    private final int transitions;
+    private final int states;
+    private final HashSet<Edge> edgeSet;
+    private final HashMap nodeSet;
+
     public LTS(String x, String y, String z) {
         this.initialState = Integer.parseInt(x);
         this.transitions = Integer.parseInt(y);
@@ -27,7 +27,31 @@ public class LTS {
         this.edgeSet = new HashSet();
         this.nodeSet = new HashMap(this.states);
     }
+
+    public int getInit() {
+        return this.initialState;
+    }
+
+    public int getTrans() {
+        return this.transitions;
+    }
+
+    public int getStates() {
+        return this.states;
+    }
+
+    public void addNode(Node n) {
+        this.nodeSet.put(n.getID(), n);
+    }
     
+    public HashMap getNodes() {
+        return this.nodeSet;
+    }
+    
+    public HashSet<Edge> getEdges() {
+        return this.edgeSet;
+    }
+
     @Override
     public String toString() {
         String init = "Initial state: " + this.initialState + "\n";
@@ -39,11 +63,11 @@ public class LTS {
         }
         return init + trans + stats + edges;
     }
-    
+
     public String toDot() {
         String edges = "";
         for (Edge edge : this.edgeSet) {
-            edges += edge.startState + " -> " + edge.endState + "[label=" + edge.label + "];\n";
+            edges += edge.getStart() + " -> " + edge.getEnd() + "[label=" + edge.getLabel() + "];\n";
         }
         String graph = "digraph G {\n" + edges + "}";
         return graph;

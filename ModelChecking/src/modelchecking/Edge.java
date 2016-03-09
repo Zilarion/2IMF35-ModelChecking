@@ -10,14 +10,26 @@ package modelchecking;
  * @author Hein
  */
 public class Edge {
-    public Node startState;
-    public String label;
-    public Node endState;
+    private final Node startState;
+    private final String label;
+    private final Node endState;
     
     public Edge(Node from, String l, Node to) {
         this.startState = from;
         this.label = l;
         this.endState = to;
+    }
+    
+    public Node getStart() {
+        return this.startState;
+    }
+    
+    public String getLabel() {
+        return this.label;
+    }
+    
+    public Node getEnd() {
+        return this.endState;
     }
     
     @Override

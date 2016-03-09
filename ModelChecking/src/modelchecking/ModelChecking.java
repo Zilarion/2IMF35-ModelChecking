@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
@@ -29,12 +30,13 @@ public class ModelChecking {
         AldebaranParser a = new AldebaranParser();
         File file = new File("C:\\Users\\Hein\\Documents\\GitHub\\2IMF35-ModelChecking\\AldebaranFormat.txt");
         LTS lts = a.readFileLTS(file);
-        Iterator it = lts.nodeSet.entrySet().iterator();
+        HashMap nodes = lts.getNodes();
+        Iterator it = nodes.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
             Node n = (Node) pair.getValue();
             //System.out.println(pair.getValue().toString());
-            for (Edge e : n.outgoingEdges) {
+            for (Edge e : n.getOutEdges()) {
                 System.out.println(e.toString());
             }
         }

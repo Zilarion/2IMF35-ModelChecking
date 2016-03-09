@@ -6,15 +6,14 @@
 package modelchecking;
 
 import java.util.HashSet;
-import java.util.Set;
 
 /**
  *
  * @author Hein
  */
 public class Node {
-    public int id;
-    public Set<Edge> outgoingEdges;
+    private final int id;
+    private final HashSet<Edge> outgoingEdges;
     
     public Node(String n) {
         this.id = Integer.parseInt(n);
@@ -23,6 +22,14 @@ public class Node {
     
     public void addEdge(Edge e) {
         this.outgoingEdges.add(e);
+    }
+    
+    public int getID() {
+        return this.id;
+    }
+    
+    public HashSet<Edge> getOutEdges() {
+        return this.outgoingEdges;
     }
     
     @Override
