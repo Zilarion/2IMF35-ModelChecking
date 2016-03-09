@@ -10,14 +10,14 @@ package modelchecking;
  * @author Hein
  */
 public class Edge {
-    public int startState;
+    public Node startState;
     public String label;
-    public int endState;
+    public Node endState;
     
-    public Edge(String x, String y, String z) {
-        this.startState = Integer.parseInt(x);
-        this.label = y;
-        this.endState = Integer.parseInt(z);
+    public Edge(Node from, String l, Node to) {
+        this.startState = from;
+        this.label = l;
+        this.endState = to;
     }
     
     @Override

@@ -42,8 +42,11 @@ public class AldebaranParser {
                 String edgeLine = scanner.nextLine();
                 m = edgePattern.matcher(edgeLine);
                 if (m.find()) {
-                    Edge edge = new Edge(m.group(1), m.group(2), m.group(3));
-                    lts.edgeList.add(edge);
+                    Node from = new Node(m.group(1));
+                    String label = m.group(2);
+                    Node to = new Node(m.group(3));
+                    Edge edge = new Edge(from, label, to);
+                    lts.edgeSet.add(edge);
                 }
             }
         }
@@ -61,8 +64,22 @@ public class AldebaranParser {
                         String edgeLine = br.readLine();
                         m = edgePattern.matcher(edgeLine);
                         if (m.find()) {
-                            Edge edge = new Edge(m.group(1), m.group(2), m.group(3));
-                            lts.edgeList.add(edge);
+                            Node from = new Node(m.group(1));
+                            String label = m.group(2);
+                            Node to = new Node(m.group(3));
+                            
+                            if (lts.nodeSet.containsKey(from.id)) {
+                                from = (Node) lts.nodeSet.get(from.id);
+                            }
+                            if (lts.nodeSet.containsKey(to.id)) {
+                                to = (Node) lts.nodeSet.get(to.id);
+                            }
+                            
+                            lts.nodeSet.put(from.id, from);
+                            lts.nodeSet.put(to.id, to);
+                            Edge edge = new Edge(from, label, to);
+                            lts.edgeSet.add(edge);
+                            from.outgoingEdges.add(edge);
                         }
                     }
                 }

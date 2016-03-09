@@ -6,11 +6,11 @@
 package modelchecking;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,9 +22,22 @@ public class ModelChecking {
 
     /**
      * @param args the command line arguments
+     * @throws java.io.IOException
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        AldebaranParser a = new AldebaranParser();
+        File file = new File("C:\\Users\\Hein\\Documents\\GitHub\\2IMF35-ModelChecking\\AldebaranFormat.txt");
+        LTS lts = a.readFileLTS(file);
+        Iterator it = lts.nodeSet.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            Node n = (Node) pair.getValue();
+            //System.out.println(pair.getValue().toString());
+            for (Edge e : n.outgoingEdges) {
+                System.out.println(e.toString());
+            }
+        }
         
         while(true) {
             System.out.println("----------------------");
