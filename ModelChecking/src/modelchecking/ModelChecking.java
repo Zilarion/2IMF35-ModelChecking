@@ -51,9 +51,12 @@ public class ModelChecking {
             } catch (IOException ex) {
                 Logger.getLogger(ModelChecking.class.getName()).log(Level.SEVERE, null, ex);
             }
+            // Strip all spaces
             s = s.replaceAll("\\s+","");
+            // Except for mu/nu ones
             s = s.replaceAll("nu","nu ");
             s = s.replaceAll("mu","mu ");
+            // Create function
             uFunction f = new uFunction(s);
             System.out.println(f);
         }

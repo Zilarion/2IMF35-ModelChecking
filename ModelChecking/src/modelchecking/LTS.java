@@ -5,8 +5,10 @@
  */
 package modelchecking;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -71,5 +73,35 @@ public class LTS {
         }
         String graph = "digraph G {\n" + edges + "}";
         return graph;
+    }
+    
+    
+    public void emersonInitialize(uFunction f, HashMap<String, Boolean> A) {
+        for (String variable : f.getVariables()) {
+            
+        }
+    }
+    
+    public void evaluateEmerson(uFunction function, HashMap<String, Boolean> A) {
+        switch(function.operator) {
+            case FALSE:
+                
+            case TRUE:
+            case VARIABLE:
+            case ACTION:
+                
+            break;
+            case AND:
+            case OR:
+            case DIAMOND:
+            case BOX:
+            case LFP:
+            case GFP:
+            break;
+        }
+    }
+    
+    public void evaluateNaive(uFunction f) {
+        
     }
 }
