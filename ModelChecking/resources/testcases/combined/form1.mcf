@@ -1,1 +1,2 @@
 nu X. (<tau>X && mu Y. (<tau>Y || [a]false))
+//Always possible to do a tau-step and (tau or no a-transition possible)

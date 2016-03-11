@@ -1,1 +1,3 @@
 mu X. ([tau]X && (<tau>true || <a>true))
+//We can always do a tau-step or an a-step and
+//after every tau-step, we can do a tau-step or an a-step
