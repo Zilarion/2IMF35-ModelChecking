@@ -30,7 +30,11 @@ public class ModelChecking {
      * @throws java.io.IOException
      */
     public static void main(String[] args) throws IOException {
-        new ModelChecking().run(args);
+        AldebaranParser a = new AldebaranParser();
+        File file = new File("C:\\Users\\Hein\\Documents\\GitHub\\2IMF35-ModelChecking\\ModelChecking\\resources\\testcases\\modal_operators\\test.aut");
+        LTS lts = a.readFileLTS(file);
+        System.out.println(lts.toDot());
+        //new ModelChecking().run(args);
     }
 
     public void run(String[] args) {
