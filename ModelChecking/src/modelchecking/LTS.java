@@ -5,10 +5,8 @@
  */
 package modelchecking;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.HashSet;
 
 /**
  *
@@ -17,48 +15,46 @@ import java.util.Set;
 public class LTS {
 
     private final int initialState;
-    private final int transitions;
-    private final int states;
     private final HashSet<Edge> edgeSet;
-    private final HashMap nodeSet;
+    private final HashSet<State> nodeSet;
 
     public LTS(String x, String y, String z) {
         this.initialState = Integer.parseInt(x);
-        this.transitions = Integer.parseInt(y);
-        this.states = Integer.parseInt(z);
-        this.edgeSet = new HashSet();
-        this.nodeSet = new HashMap(this.states);
+        int transitions = Integer.parseInt(y);
+        int states = Integer.parseInt(z);
+        this.edgeSet = new HashSet<>();
+        this.nodeSet = new HashSet<>(states);
     }
 
     public int getInit() {
         return this.initialState;
     }
 
-    public int getTrans() {
-        return this.transitions;
-    }
-
-    public int getStates() {
-        return this.states;
-    }
-
-    public void addNode(Node n) {
-        this.nodeSet.put(n.getID(), n);
-    }
-    
-    public HashMap getNodes() {
-        return this.nodeSet;
-    }
-    
     public HashSet<Edge> getEdges() {
         return this.edgeSet;
     }
+    
+    public int getEdgeCount() {
+        return this.edgeSet.size();
+    }
 
+    public HashSet<State> getStates() {
+        return this.nodeSet;
+    }
+    
+    public int getStateSize() {
+        return nodeSet.size();
+    }
+
+    public void addNode(State n) {
+        this.nodeSet.add(n);
+    }
+    
     @Override
     public String toString() {
         String init = "Initial state: " + this.initialState + "\n";
-        String trans = "Nr of transitions: " + this.transitions + "\n";
-        String stats = "Nr of states: " + this.states + "\n";
+        String trans = "Nr of transitions: " + this.edgeSet.size() + "\n";
+        String stats = "Nr of states: " + this.nodeSet.size() + "\n";
         String edges = "";
         for (Edge edge : this.edgeSet) {
             edges += edge.toString() + "\n";
@@ -73,35 +69,5 @@ public class LTS {
         }
         String graph = "digraph G {\n" + edges + "}";
         return graph;
-    }
-    
-    
-    public void emersonInitialize(uFunction f, HashMap<String, Boolean> A) {
-        for (String variable : f.getVariables()) {
-            
-        }
-    }
-    
-    public void evaluateEmerson(uFunction function, HashMap<String, Boolean> A) {
-        switch(function.operator) {
-            case FALSE:
-                
-            case TRUE:
-            case VARIABLE:
-            case ACTION:
-                
-            break;
-            case AND:
-            case OR:
-            case DIAMOND:
-            case BOX:
-            case LFP:
-            case GFP:
-            break;
-        }
-    }
-    
-    public void evaluateNaive(uFunction f) {
-        
     }
 }

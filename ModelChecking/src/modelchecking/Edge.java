@@ -10,17 +10,17 @@ package modelchecking;
  * @author Hein
  */
 public class Edge {
-    private final Node startState;
+    private final State startState;
     private final String label;
-    private final Node endState;
+    private final State endState;
     
-    public Edge(Node from, String l, Node to) {
+    public Edge(State from, String l, State to) {
         this.startState = from;
         this.label = l;
         this.endState = to;
     }
     
-    public Node getStart() {
+    public State getStart() {
         return this.startState;
     }
     
@@ -28,7 +28,7 @@ public class Edge {
         return this.label;
     }
     
-    public Node getEnd() {
+    public State getEnd() {
         return this.endState;
     }
     

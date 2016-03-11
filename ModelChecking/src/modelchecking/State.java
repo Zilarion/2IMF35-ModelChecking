@@ -11,11 +11,11 @@ import java.util.HashSet;
  *
  * @author Hein
  */
-public class Node {
+public class State {
     private final int id;
     private final HashSet<Edge> outgoingEdges;
     
-    public Node(String n) {
+    public State(String n) {
         this.id = Integer.parseInt(n);
         this.outgoingEdges = new HashSet();
     }
@@ -35,8 +35,8 @@ public class Node {
     @Override
     public boolean equals(Object obj) {
         if (obj == null) return false;
-        if (!Node.class.isAssignableFrom(obj.getClass())) return false;
-        final Node n = (Node) obj;
+        if (!State.class.isAssignableFrom(obj.getClass())) return false;
+        final State n = (State) obj;
         return (this.id == n.id);
     }
 
