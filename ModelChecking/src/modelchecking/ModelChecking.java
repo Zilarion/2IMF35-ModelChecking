@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
@@ -30,16 +31,6 @@ public class ModelChecking {
         AldebaranParser a = new AldebaranParser();
         File file = new File("C:\\Users\\Hein\\Documents\\GitHub\\2IMF35-ModelChecking\\AldebaranFormat.txt");
         LTS lts = a.readFileLTS(file);
-        HashMap nodes = lts.getNodes();
-        Iterator it = nodes.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            Node n = (Node) pair.getValue();
-            //System.out.println(pair.getValue().toString());
-            for (Edge e : n.getOutEdges()) {
-                System.out.println(e.toString());
-            }
-        }
         
         while(true) {
             System.out.println("----------------------");
@@ -51,9 +42,12 @@ public class ModelChecking {
             } catch (IOException ex) {
                 Logger.getLogger(ModelChecking.class.getName()).log(Level.SEVERE, null, ex);
             }
+            // Strip all spaces
             s = s.replaceAll("\\s+","");
+            // Except for mu/nu ones
             s = s.replaceAll("nu","nu ");
             s = s.replaceAll("mu","mu ");
+            // Create function
             uFunction f = new uFunction(s);
             System.out.println(f);
         }

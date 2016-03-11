@@ -5,6 +5,9 @@
  */
 package modelchecking;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import modelchecking.uOperator.uOperations;
@@ -26,7 +29,7 @@ public class uFunction {
     public uFunction(String def, int depth) {
         this.def = def;
         this.depth = depth;
-        setOperator(uOperator.getOperator(def));
+        this.setOperator(uOperator.getOperator(def));
     }
     
     public void setOperator(uOperations op) {
@@ -65,6 +68,25 @@ public class uFunction {
                 break;
             }
         }
+    }
+    
+    public List<String> getVariables() {
+        List<String> variables = new ArrayList<>();
+        switch(this.operator) {
+            case VARIABLE:
+                variables.add(this.def);
+            break;
+            case AND:
+            case OR:
+            case DIAMOND:
+            case BOX:
+            case LFP:
+            case GFP:
+                variables.addAll(leftChild.getVariables());
+                variables.addAll(rightChild.getVariables());
+            break;
+        }
+        return variables;
     }
     
     public void setLeftChild(uFunction f) {

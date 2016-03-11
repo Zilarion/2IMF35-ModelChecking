@@ -44,17 +44,17 @@ public class AldebaranParser {
                 String edgeLine = scanner.nextLine();
                 m = edgePattern.matcher(edgeLine);
                 if (m.find()) {
-                    Node from = new Node(m.group(1));
+                    State from = new State(m.group(1));
                     String label = m.group(2);
-                    Node to = new Node(m.group(3));
+                    State to = new State(m.group(3));
                     HashMap nodes = lts.getNodes();
                     int fromID = from.getID();
                     int toID = to.getID();
                     if (nodes.containsKey(fromID)) {
-                        from = (Node) nodes.get(fromID);
+                        from = (State) nodes.get(fromID);
                     }
                     if (nodes.containsKey(toID)) {
-                        to = (Node) nodes.get(toID);
+                        to = (State) nodes.get(toID);
                     }
 
                     nodes.put(fromID, from);
@@ -81,17 +81,17 @@ public class AldebaranParser {
                         String edgeLine = br.readLine();
                         m = edgePattern.matcher(edgeLine);
                         if (m.find()) {
-                            Node from = new Node(m.group(1));
+                            State from = new State(m.group(1));
                             String label = m.group(2);
-                            Node to = new Node(m.group(3));
+                            State to = new State(m.group(3));
                             HashMap nodes = lts.getNodes();
                             int fromID = from.getID();
                             int toID = to.getID();
                             if (nodes.containsKey(fromID)) {
-                                from = (Node) nodes.get(fromID);
+                                from = (State) nodes.get(fromID);
                             }
                             if (nodes.containsKey(toID)) {
-                                to = (Node) nodes.get(toID);
+                                to = (State) nodes.get(toID);
                             }
 
                             nodes.put(fromID, from);
