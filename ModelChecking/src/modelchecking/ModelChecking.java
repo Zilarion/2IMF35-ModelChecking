@@ -34,10 +34,32 @@ public class ModelChecking {
     }
 
     public void run(String[] args) {
-        String inputLTS = args[0];
-        String inputFunction = args[1];
-        String output = args[2];
-        String algorithm = args[3];
+        String inputLTS = "";
+        String inputFunction = "";
+        String output = "";
+        String algorithm = "";
+        
+        for (int i=0; i<args.length; i++) {
+            switch(args[i]) {
+                case "-lts":
+                    inputLTS = args[i+1];
+                    i++;
+                    break;
+                case "-f":
+                    inputFunction = args[i+1];
+                    i++;
+                    break;
+                case "-o":
+                    output = args[i+1];
+                    i++;
+                    break;
+                case "-alg":
+                    algorithm = args[i+1];
+                    i++;
+                    break;
+                default: return;
+            }
+        }
 
         LTS lts = loadLTS(inputLTS);
         uFunction function = loadFunction(inputFunction);
