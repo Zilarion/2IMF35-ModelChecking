@@ -16,6 +16,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import uLanguage.uFormula;
 
 /**
  *
@@ -35,6 +36,15 @@ public class ModelChecking {
         LTS lts = a.readFileLTS(file);
         System.out.println(lts.toDot());
         //new ModelChecking().run(args);
+    }
+    
+    public void run() {
+        LTS lts = loadLTS("/Users/ruudandriessen/study/2imf35/2IMF35-ModelChecking/ModelChecking/resources/testcases/modal_operators/test.aut");
+        while(true) {
+            uFormula formula = getInputFunction();
+            HashSet<State> result = NaiveEvaluator.evaluate(formula, lts);
+            System.out.println(result);
+        }
     }
 
     public void run(String[] args) {
@@ -66,7 +76,7 @@ public class ModelChecking {
         }
 
         LTS lts = loadLTS(inputLTS);
-        uFunction function = loadFunction(inputFunction);
+        uFormula function = loadFunction(inputFunction);
         HashSet<State> result = null;
         if (algorithm.equals("naive")) {
             result = NaiveEvaluator.evaluate(function, lts, new Environment());
@@ -89,9 +99,9 @@ public class ModelChecking {
         return null;
     }
 
-    public uFunction loadFunction(String path) {
+    public uFormula loadFunction(String path) {
         BufferedReader br = null;
-        uFunction function = null;
+        uFormula formula = null;
         try {
             File file = new File(path);
             br = new BufferedReader(new FileReader(file));
@@ -102,7 +112,7 @@ public class ModelChecking {
             s = s.replaceAll("nu", "nu ");
             s = s.replaceAll("mu", "mu ");
             // Create function
-            function = new uFunction(s);
+            formula = FormulaBuilder.buildFormula(s);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ModelChecking.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -114,10 +124,10 @@ public class ModelChecking {
                 Logger.getLogger(ModelChecking.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return function;
+        return formula;
     }
 
-    public uFunction getInputFunction() {
+    public uFormula getInputFunction() {
         System.out.println("----------------------");
         System.out.println("Model checking v0.1a");
         System.out.println("Please enter uInput: ");
@@ -134,10 +144,7 @@ public class ModelChecking {
         s = s.replaceAll("nu", "nu ");
         s = s.replaceAll("mu", "mu ");
         // Create function
-        uFunction f = new uFunction(s);
-
-        System.out.println(f);
-        return f;
+        return FormulaBuilder.buildFormula(s);
     }
 
     public void writeOutput(HashSet<State> result, String path) {

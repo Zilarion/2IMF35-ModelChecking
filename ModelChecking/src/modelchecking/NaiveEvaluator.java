@@ -6,89 +6,125 @@
 package modelchecking;
 
 import java.util.HashSet;
-import modelchecking.uOperator.uOperations;
+import uLanguage.Box;
+import uLanguage.Conjunction;
+import uLanguage.Diamond;
+import uLanguage.Disjunction;
+import uLanguage.GFP;
+import uLanguage.LFP;
+import uLanguage.Negation;
+import uLanguage.Variable;
+import uLanguage.uFormula;
 
 /**
  *
  * @author ruudandriessen
  */
 public class NaiveEvaluator {
-    public static HashSet<State> evaluate(uFunction f, LTS lts, Environment e) {
+    
+    public static HashSet<State> evaluate(uFormula f, LTS lts) {
+        return NaiveEvaluator.evaluate(f, lts, new Environment());
+    }
+    
+    public static HashSet<State> evaluate(uFormula f, LTS lts, Environment e) {
+        HashSet<State> result;
         switch (f.operator) {
             case FALSE:
                 // return Empty
-                return new HashSet<>();
+                result = new HashSet<>();
+                break;
             case TRUE:
                 // return S
-                return lts.getStates();
+                result = lts.getStates();
+                break;
             case NEGATION:
                 // return S \ evaluate(!f)
-                HashSet<State> S = lts.getStates();
-                S.removeAll(evaluate(f.leftChild, lts, e));
-                return S;
+                HashSet<State> S = new HashSet<>(lts.getStates());
+                S.removeAll(evaluate(((Negation) f).formula, lts, e));
+                result = S;
+                break;
             case VARIABLE:
                 // Get the value of the variable
-                return e.getVariable(f.def);
-            case ACTION:
-                // TODO
-                return new HashSet<>();
+                result = e.getVariable((Variable) f);
+                break;
             case AND:
-                // Return intersection
-                return intersection(evaluate(f.leftChild, lts, e), 
-                                    evaluate(f.rightChild, lts, e));
+                // Return conjunction
+                Conjunction conjun = (Conjunction) f;
+                result = intersection(evaluate(conjun.leftFormula, lts, e), 
+                                    evaluate(conjun.leftFormula, lts, e));
+                break;
             case OR:
                 // Return union
-                return union(evaluate(f.leftChild, lts, e), 
-                             evaluate(f.rightChild, lts, e));
+                Disjunction disjun = (Disjunction) f;
+                result = union(evaluate(disjun.leftFormula, lts, e), 
+                             evaluate(disjun.rightFormula, lts, e));
+                break;
             case DIAMOND:
                 // Instead of evaluating <a>f return evaluate([a]!f)
                 
                 // Create box and negate functions
-                uFunction box = new uFunction(uOperations.BOX);
-                uFunction negatedFunction = new uFunction(uOperations.NEGATION);
+                Diamond diamond = (Diamond) f;
                 
-                // Keep the same label
-                box.setLeftChild(f.leftChild);
-                // Set the function to be the same as before
-                negatedFunction.setLeftChild(f.rightChild);
-                
-                // Set the box right child to the negation
-                box.setRightChild(negatedFunction);
-                
+                Negation negatedSubFormula = new Negation(diamond.subFormula);  // !f
+                Box newBox = new Box(diamond.action, negatedSubFormula);        // [a]!f
+                Negation negatedNewBox = new Negation(newBox);                  // ![a]!f
+                 
                 // Evaluate box operation
-                return evaluate(box, lts, e);
+                result = evaluate(negatedNewBox, lts, e);
+                break;
             case BOX:
                 // Solve subform
-                HashSet<State> subForm = evaluate(f.rightChild, lts, e);
-                HashSet<State> values = new HashSet<>();
+                Box box = (Box) f;
+                HashSet<State> subFormResult = evaluate(box.subFormula, lts, e);
+                HashSet<State> values = new HashSet<>(lts.getStates());
                 for (State s : lts.getStates()) {
-                    HashSet<Edge> edges = s.getEdgesWithLabel(f.leftChild.def);
+                    HashSet<Edge> edges = s.getEdgesWithLabel(box.action);
                     for (Edge edge : edges) {
-                        if (subForm.contains(edge.getEnd()))
-                            values.add(edge.getEnd());
+                        if (!subFormResult.contains(edge.getEnd()))
+                            values.remove(s);
                     }
                 }
-                return values;            
+                result = values;      
+                break;
             case LFP:
-                e.setVariable(f.leftChild.def, new HashSet<>());
-                e.setVariable(f.leftChild.def, evaluate(f.rightChild, lts, e));
-                return new HashSet<>();
+                LFP lfp = (LFP) f;
+                result = new HashSet<>();
+                do {                 
+                    e.setVariable(lfp.variable, result);
+                    result = evaluate(lfp.formula, lts, e);
+                } while(!intersection(result, e.getVariable(lfp.variable)).equals(result));
+                
+                e.setVariable(lfp.variable, result);
+                break;
             case GFP:
-                e.setVariable(f.leftChild.def, lts.getStates());
-                return new HashSet<>();
+                GFP gfp = (GFP) f;
+                result = new HashSet<>(lts.getStates());
+                do {
+                    e.setVariable(gfp.variable, result);
+                    result = evaluate(gfp.formula, lts, e);
+                } while (!intersection(result, e.getVariable(gfp.variable)).equals(result));
+                
+                e.setVariable(gfp.variable, result);
+                break;
             default: 
                 System.out.println("Warning - unknown operator to evaluate: " + f.operator);
-                return new HashSet<>();
+                result = new HashSet<>();
+                break;
         }
+//        System.out.println("Result: " + f.operator);
+//        System.out.println(result);
+        return result;
     }
     
     public static HashSet<State> union(HashSet<State> s1, HashSet<State> s2) {
-        s1.addAll(s2);
-        return s1;
+        HashSet<State> s = new HashSet<>(s1);
+        s.addAll(s2);
+        return s;
     }
     
     public static HashSet<State> intersection(HashSet<State> s1, HashSet<State> s2) {
-        s1.retainAll(s2);
-        return s1;
+        HashSet<State> s = new HashSet<>(s1);
+        s.retainAll(s2);
+        return s;
     }
 }

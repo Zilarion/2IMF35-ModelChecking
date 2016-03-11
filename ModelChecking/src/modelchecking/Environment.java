@@ -7,6 +7,7 @@ package modelchecking;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import uLanguage.Variable;
 
 /**
  *
@@ -19,13 +20,13 @@ class Environment {
         variables = new HashMap<>();
     }
     
-    public void setVariable(String key, HashSet<State> value) {
-        variables.put(key, value);
+    public void setVariable(Variable key, HashSet<State> value) {
+        variables.put(key.name, value);
     }
     
-    public HashSet<State> getVariable(String var) {
-        if (variables.containsKey(var)) 
-            return variables.get(var);
+    public HashSet<State> getVariable(Variable var) {
+        if (variables.containsKey(var.name)) 
+            return variables.get(var.name);
         return new HashSet<>();
     }
 }
