@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import uLanguage.uFormula;
 
 /**
  *
@@ -31,8 +32,8 @@ public class ModelChecking {
     public void run() {
         LTS lts = loadLTS("/Users/ruudandriessen/study/2imf35/2IMF35-ModelChecking/ModelChecking/resources/testcases/modal_operators/test.aut");
         while(true) {
-            uFunction function = getInputFunction();
-            HashSet<State> result = NaiveEvaluator.evaluate(function, lts, new Environment());
+            uFormula formula = getInputFunction();
+            HashSet<State> result = NaiveEvaluator.evaluate(formula, lts);
             System.out.println(result);
         }
     }
@@ -50,7 +51,7 @@ public class ModelChecking {
         return null;
     }
     
-    public uFunction getInputFunction() {
+    public uFormula getInputFunction() {
         System.out.println("----------------------");
         System.out.println("Model checking v0.1a");
         System.out.println("Please enter uInput: ");
@@ -67,9 +68,6 @@ public class ModelChecking {
         s = s.replaceAll("nu","nu ");
         s = s.replaceAll("mu","mu ");
         // Create function
-        uFunction f = new uFunction(s);
-        
-        System.out.println(f);
-        return f;
+        return FormulaBuilder.buildFormula(s);
     }
 }

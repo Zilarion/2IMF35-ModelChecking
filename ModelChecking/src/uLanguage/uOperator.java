@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package modelchecking;
+package uLanguage;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  */
 public class uOperator {
     public static enum uOperations {
-        FALSE, TRUE, VARIABLE, AND, OR, DIAMOND, BOX, LFP, GFP, ACTION, NEGATION
+        FALSE, TRUE, VARIABLE, AND, OR, DIAMOND, BOX, LFP, GFP, NEGATION
     }
     
     static Pattern falsePattern = Pattern.compile("^[\\s]*false[\\s]*$");
@@ -36,8 +36,8 @@ public class uOperator {
                 return truePattern;
             case VARIABLE:
                 return variablePattern;
-            case ACTION: 
-                return actionPattern;
+//            case ACTION: 
+//                return actionPattern;
             case AND:
                 return andPattern;
             case OR:
