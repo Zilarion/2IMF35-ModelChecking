@@ -7,8 +7,12 @@ package modelchecking;
 
 import java.io.File;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,6 +23,7 @@ import uLanguage.uFormula;
  * @author ruudandriessen
  */
 public class ModelChecking {
+
     static final ClassLoader loader = ModelChecking.class.getClassLoader();
 
     /**
@@ -26,7 +31,11 @@ public class ModelChecking {
      * @throws java.io.IOException
      */
     public static void main(String[] args) throws IOException {
-        new ModelChecking().run();  
+        AldebaranParser a = new AldebaranParser();
+        File file = new File("C:\\Users\\Hein\\Documents\\GitHub\\2IMF35-ModelChecking\\ModelChecking\\resources\\testcases\\modal_operators\\test.aut");
+        LTS lts = a.readFileLTS(file);
+        System.out.println(lts.toDot());
+        //new ModelChecking().run(args);
     }
     
     public void run() {
@@ -37,11 +46,50 @@ public class ModelChecking {
             System.out.println(result);
         }
     }
-    
+
+    public void run(String[] args) {
+        String inputLTS = "";
+        String inputFunction = "";
+        String output = "";
+        String algorithm = "";
+        
+        for (int i=0; i<args.length; i++) {
+            switch(args[i]) {
+                case "-lts":
+                    inputLTS = args[i+1];
+                    i++;
+                    break;
+                case "-f":
+                    inputFunction = args[i+1];
+                    i++;
+                    break;
+                case "-o":
+                    output = args[i+1];
+                    i++;
+                    break;
+                case "-alg":
+                    algorithm = args[i+1];
+                    i++;
+                    break;
+                default: return;
+            }
+        }
+
+        LTS lts = loadLTS(inputLTS);
+        uFormula function = loadFunction(inputFunction);
+        HashSet<State> result = null;
+        if (algorithm.equals("naive")) {
+            result = NaiveEvaluator.evaluate(function, lts, new Environment());
+        } else if (algorithm.equals("improved")) {
+            //result = NaiveEvaluator.evaluate(function, lts, new Environment());
+        }
+        writeOutput(result, output);
+    }
+
     public LTS loadLTS(String path) {
         try {
             AldebaranParser a = new AldebaranParser();
-            
+
             File file = new File(path);
             LTS lts = a.readFileLTS(file);
             return lts;
@@ -50,7 +98,35 @@ public class ModelChecking {
         }
         return null;
     }
-    
+
+    public uFormula loadFunction(String path) {
+        BufferedReader br = null;
+        uFormula formula = null;
+        try {
+            File file = new File(path);
+            br = new BufferedReader(new FileReader(file));
+            String s = br.readLine();
+            // Strip all spaces
+            s = s.replaceAll("\\s+", "");
+            // Except for mu/nu ones
+            s = s.replaceAll("nu", "nu ");
+            s = s.replaceAll("mu", "mu ");
+            // Create function
+            formula = FormulaBuilder.buildFormula(s);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ModelChecking.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ModelChecking.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                br.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ModelChecking.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return formula;
+    }
+
     public uFormula getInputFunction() {
         System.out.println("----------------------");
         System.out.println("Model checking v0.1a");
@@ -63,11 +139,25 @@ public class ModelChecking {
             Logger.getLogger(ModelChecking.class.getName()).log(Level.SEVERE, null, ex);
         }
         // Strip all spaces
-        s = s.replaceAll("\\s+","");
+        s = s.replaceAll("\\s+", "");
         // Except for mu/nu ones
-        s = s.replaceAll("nu","nu ");
-        s = s.replaceAll("mu","mu ");
+        s = s.replaceAll("nu", "nu ");
+        s = s.replaceAll("mu", "mu ");
         // Create function
         return FormulaBuilder.buildFormula(s);
+    }
+
+    public void writeOutput(HashSet<State> result, String path) {
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter(path, "UTF-8");
+            writer.println(result);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ModelChecking.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(ModelChecking.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            writer.close();
+        }
     }
 }
