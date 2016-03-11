@@ -15,12 +15,13 @@ import java.util.HashSet;
 public class LTS {
 
     private final int initialState;
+    private final int absoluteEdges;
     private final HashSet<Edge> edgeSet;
     private final HashSet<State> nodeSet;
 
     public LTS(String x, String y, String z) {
         this.initialState = Integer.parseInt(x);
-        int transitions = Integer.parseInt(y);
+        this.absoluteEdges = Integer.parseInt(y);
         int states = Integer.parseInt(z);
         this.edgeSet = new HashSet<>();
         this.nodeSet = new HashSet<>(states);
@@ -48,6 +49,10 @@ public class LTS {
 
     public void addNode(State n) {
         this.nodeSet.add(n);
+    }
+    
+    public int getAbsoluteEdgeCount() {
+        return absoluteEdges;
     }
     
     @Override

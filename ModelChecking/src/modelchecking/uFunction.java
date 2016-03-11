@@ -32,6 +32,18 @@ public class uFunction {
         this.setOperator(uOperator.getOperator(def));
     }
     
+    public uFunction(String def, uOperations operator) {
+        this.def = def;
+        this.depth = 0;
+        this.operator = operator;
+    }
+    
+    public uFunction(uOperations operator) {
+        this.def = "";
+        this.depth = 0;
+        this.operator = operator;
+    }
+    
     public void setOperator(uOperations op) {
         this.operator = op;
         

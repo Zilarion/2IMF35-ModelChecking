@@ -13,17 +13,19 @@ import java.util.HashSet;
  * @author ruudandriessen
  */
 class Environment {
-    HashMap<String, Boolean> variables;
+    HashMap<String, HashSet<State>> variables;
     
     public Environment() {
         variables = new HashMap<>();
     }
     
-    public void addVariable(String var, boolean value) {
-        variables.put(var, value);
+    public void setVariable(String key, HashSet<State> value) {
+        variables.put(key, value);
     }
     
-    public HashSet<State> getVariable() {
-        return new HashSet<State>();
+    public HashSet<State> getVariable(String var) {
+        if (variables.containsKey(var)) 
+            return variables.get(var);
+        return new HashSet<>();
     }
 }

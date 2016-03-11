@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -40,31 +40,10 @@ public class AldebaranParser {
         Matcher m = initPattern.matcher(init);
         if (m.find()) {
             lts = new LTS(m.group(1), m.group(2), m.group(3));
-            for (int x = 0; x < lts.getTrans(); x++) {
+            for (int x = 0; x < lts.getAbsoluteEdgeCount(); x++) {
                 String edgeLine = scanner.nextLine();
                 m = edgePattern.matcher(edgeLine);
-                if (m.find()) {
-                    State from = new State(m.group(1));
-                    String label = m.group(2);
-                    State to = new State(m.group(3));
-                    HashMap nodes = lts.getNodes();
-                    int fromID = from.getID();
-                    int toID = to.getID();
-                    if (nodes.containsKey(fromID)) {
-                        from = (State) nodes.get(fromID);
-                    }
-                    if (nodes.containsKey(toID)) {
-                        to = (State) nodes.get(toID);
-                    }
-
-                    nodes.put(fromID, from);
-                    nodes.put(toID, to);
-                    Edge edge = new Edge(from, label, to);
-                    HashSet edges = lts.getEdges();
-                    edges.add(edge);
-
-                    from.getOutEdges().add(edge);
-                }
+                parseLTS(lts, m);
             }
         }
         return lts;
@@ -77,34 +56,42 @@ public class AldebaranParser {
                 Matcher m = initPattern.matcher(line);
                 if (m.find()) {
                     lts = new LTS(m.group(1), m.group(2), m.group(3));
-                    for (int x = 0; x < lts.getTrans(); x++) {
+                    for (int x = 0; x < lts.getAbsoluteEdgeCount(); x++) {
                         String edgeLine = br.readLine();
                         m = edgePattern.matcher(edgeLine);
-                        if (m.find()) {
-                            State from = new State(m.group(1));
-                            String label = m.group(2);
-                            State to = new State(m.group(3));
-                            HashMap nodes = lts.getNodes();
-                            int fromID = from.getID();
-                            int toID = to.getID();
-                            if (nodes.containsKey(fromID)) {
-                                from = (State) nodes.get(fromID);
-                            }
-                            if (nodes.containsKey(toID)) {
-                                to = (State) nodes.get(toID);
-                            }
-
-                            nodes.put(fromID, from);
-                            nodes.put(toID, to);
-                            Edge edge = new Edge(from, label, to);
-                            HashSet edges = lts.getEdges();
-                            edges.add(edge);
-
-                            from.getOutEdges().add(edge);
-                        }
+                        parseLTS(lts, m);
                     }
                 }
             }
+        }
+        return lts;
+    }
+    
+    private LTS parseLTS(LTS lts, Matcher m) {
+        if (m.find()) {
+            State from = new State(m.group(1));
+            String label = m.group(2);
+            State to = new State(m.group(3));
+            HashSet<State> states = lts.getStates();
+            if (states.contains(to) || states.contains(from)) {
+                ArrayList<State> stateList = new ArrayList<>(states);
+                int toIndex = stateList.indexOf(to);
+                int fromIndex = stateList.indexOf(from);
+                if (toIndex >= 0) {
+                    to = stateList.get(toIndex);
+                }
+                if (fromIndex >= 0) {
+                    from = stateList.get(fromIndex);
+                }
+            }
+            lts.addNode(to);
+            lts.addNode(from);
+
+            Edge edge = new Edge(from, label, to);
+            HashSet edges = lts.getEdges();
+            edges.add(edge);
+
+            from.getOutEdges().add(edge);
         }
         return lts;
     }

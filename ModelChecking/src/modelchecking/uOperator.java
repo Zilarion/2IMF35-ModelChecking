@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  */
 public class uOperator {
     public static enum uOperations {
-        FALSE, TRUE, VARIABLE, AND, OR, DIAMOND, BOX, LFP, GFP, ACTION
+        FALSE, TRUE, VARIABLE, AND, OR, DIAMOND, BOX, LFP, GFP, ACTION, NEGATION
     }
     
     static Pattern falsePattern = Pattern.compile("^[\\s]*false[\\s]*$");
@@ -51,7 +51,7 @@ public class uOperator {
             case GFP:
                 return gfpPattern;
         }
-        System.out.println("Error - Could not find valid operator for: " + op);
+        System.out.println("Error - Could not find operator pattern for: " + op);
         return null;
     }
     
