@@ -63,7 +63,6 @@ public class NaiveEvaluator {
                 HashSet<State> values = new HashSet<>();
                 for (State s : lts.getStates()) {
                     HashSet<Edge> edges = s.getEdgesWithLabel(f.leftChild.def);
-                    System.out.println(edges);
                     for (Edge edge : edges) {
                         if (subForm.contains(edge.getEnd()))
                             values.add(edge.getEnd());

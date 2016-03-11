@@ -57,6 +57,7 @@ public class uOperator {
     
     public static uOperations getOperator(String input) {
         for (uOperations op : uOperations.values()) {
+            if (op == uOperations.NEGATION) continue;
             Matcher m = getPattern(op).matcher(input);
             if (m.find()) {
                 return op;

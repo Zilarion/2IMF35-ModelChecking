@@ -68,6 +68,8 @@ public class ModelChecking {
         s = s.replaceAll("mu","mu ");
         // Create function
         uFunction f = new uFunction(s);
+        
+        System.out.println(f);
         return f;
     }
 }

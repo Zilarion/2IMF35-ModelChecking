@@ -31,7 +31,7 @@ public class AldebaranParser {
     public AldebaranParser() {
         this.scanner = new Scanner(System.in);
         this.initPattern = Pattern.compile("des \\(([0-9]+),([0-9]+),([0-9]+)\\)");
-        this.edgePattern = Pattern.compile("\\(([0-9])+,(\\\"[0-9a-zA-Z, ()]*\\\"),([0-9]+)\\)");
+        this.edgePattern = Pattern.compile("\\(([0-9])+,\\\"([0-9a-zA-Z, ()]*)\\\",([0-9]+)\\)");
     }
 
     public LTS readLTS() {

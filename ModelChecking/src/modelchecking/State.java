@@ -34,12 +34,9 @@ public class State {
     
     public HashSet<Edge> getEdgesWithLabel(String label) {
         HashSet<Edge> edges = new HashSet<>();
-        System.out.println("Edges with label: "+label);
         for (Edge e : outgoingEdges) {
             if (e.getLabel().equals(label)) {
                 edges.add(e);
-            } else {
-                System.out.println(e.getLabel() + " != " + label);
             }
         }
         return edges;
