@@ -12,6 +12,9 @@ public class GFP extends uFormula {
         this.variable = variable;
         this.formula = formula;
         this.operator = uOperator.uOperations.GFP;
+        
+        this.addChild(variable);
+        this.addChild(formula);
     }
     
     @Override

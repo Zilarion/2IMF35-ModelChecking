@@ -12,6 +12,7 @@ public class Diamond extends uFormula {
         this.action = action;
         this.subFormula = subFormula;
         this.operator = uOperator.uOperations.DIAMOND;
+        this.addChild(subFormula);
     }
     
     @Override

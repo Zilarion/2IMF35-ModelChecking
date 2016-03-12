@@ -8,10 +8,29 @@ import static uLanguage.uOperator.uOperations;
  */
 public class Variable extends uFormula {
     public String name;
+    public enum Bound {LFPBound, GFPBound, NotBound};
+    public Bound boundBy;
     
     public Variable(String name) {
         this.name = name;
         this.operator = uOperations.VARIABLE;
+    }
+    
+    public boolean calculateBound(uFormula f) {
+        uFormula searchParent = this.parent;
+        do {
+            if (searchParent.operator == uOperations.GFP) {
+                boundBy = Bound.LFPBound;
+                return true;
+            }
+            if (searchParent.operator == uOperations.LFP) {
+                boundBy = Bound.GFPBound;
+                return true;
+            }
+            searchParent = searchParent.parent;
+        } while (parent != f);
+        boundBy = Bound.NotBound;
+        return false;
     }
     
     public boolean isBound(uFormula f) {        

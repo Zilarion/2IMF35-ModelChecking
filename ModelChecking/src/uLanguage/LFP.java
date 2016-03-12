@@ -14,6 +14,9 @@ public class LFP extends uFormula {
         this.variable = variable;
         this.formula = formula;
         this.operator = uOperations.LFP;
+        
+        this.addChild(variable);
+        this.addChild(formula);
     }
     
     @Override

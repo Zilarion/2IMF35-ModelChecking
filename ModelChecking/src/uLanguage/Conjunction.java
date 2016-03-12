@@ -11,6 +11,9 @@ public class Conjunction extends uFormula {
         this.leftFormula = leftFormula;
         this.rightFormula = rightFormula;
         this.operator = uOperator.uOperations.AND;
+        
+        this.addChild(leftFormula);
+        this.addChild(rightFormula);
     }    
     
     @Override

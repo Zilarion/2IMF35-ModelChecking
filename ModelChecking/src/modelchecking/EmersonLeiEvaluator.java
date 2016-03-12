@@ -5,7 +5,12 @@
  */
 package modelchecking;
 import java.util.HashSet;
+import uLanguage.GFP;
+import uLanguage.LFP;
+import uLanguage.Variable;
+import uLanguage.Variable.Bound;
 import uLanguage.uFormula;
+import uLanguage.uOperator.uOperations;
 
 /**
  *
@@ -13,10 +18,22 @@ import uLanguage.uFormula;
  */
 public class EmersonLeiEvaluator {
     public static HashSet<State> evaluate(uFormula f, LTS lts) {
-//        init(f);
-        return evaluate(f, lts, new Environment());
+        Environment e = new Environment();
+        init(f, lts, e);
+        return evaluate(f, lts, e);
     }
     
+    public static void init(uFormula f, LTS lts, Environment e) {
+        for (Variable v : f.getVariables()) {
+            if (v.calculateBound(f)) {
+                if (v.boundBy == Bound.LFPBound) {
+                    e.setVariable(v, new HashSet<>());
+                } else if (v.boundBy == Bound.GFPBound) {
+                    e.setVariable(v, new HashSet<>(lts.getStates()));
+                }
+            }
+        }
+    }
     
     public static HashSet<State> evaluate(uFormula f, LTS lts, Environment e) {
         HashSet<State> result;
@@ -28,33 +45,41 @@ public class EmersonLeiEvaluator {
             case VARIABLE:
             case AND:
             case OR:
-//            case DIAMOND:
-//            case BOX:
-//                result = NaiveEvaluator.evaluate(f, lts, e);
-//                break;
-//            case LFP:
-//                
-//                
-//                result = new HashSet<>();
-//                do {                 
-//                    e.setVariable(f.leftChild.def, result);
-//                    result = evaluate(f.rightChild, lts, e);
-//                } while(!intersection(result, e.getVariable(f.leftChild.def)).equals(result));
-//                
-//                e.setVariable(f.leftChild.def, result);
-//                break;
-//            case GFP:
-//                if (f.scope == Scope.LFP) {
-//                    
-//                }
-//                
-//                result = new HashSet<>(lts.getStates());
-//                do {
-//                    e.setVariable(f.leftChild.def, result);
-//                    result = evaluate(f.rightChild, lts, e);
-//                } while (!intersection(result, e.getVariable(f.leftChild.def)).equals(result));
-//                e.setVariable(f.leftChild.def, result);
-//                break;
+            case DIAMOND:
+            case BOX:
+                return NaiveEvaluator.evaluate(f, lts, e);
+            case LFP:
+                LFP lfp = (LFP) f;
+                if (lfp.parent.operator == uOperations.LFP) {
+                        // reset open subformulae of form nu Xk.g set env[k]=true
+                        for (uFormula childFormula : lfp.getChildrenFormulas(uOperations.GFP)) {
+                            GFP innerGFP = (GFP) childFormula;
+                            e.setVariable(innerGFP.variable, new HashSet<>(lts.getStates()));
+                        }
+                }
+
+                HashSet<State> Xoldlfp;
+                do {
+                        Xoldlfp = e.getVariable(lfp.variable);
+                        e.setVariable(lfp.variable, evaluate(lfp.formula, lts, e));
+                } while (Xoldlfp.size() != e.getVariable(lfp.variable).size());
+                return e.getVariable(lfp.variable);
+            case GFP:
+                GFP gfp = (GFP) f;
+                if (gfp.parent.operator == uOperations.GFP) {
+                        // reset open subformulae of form nu Xk.g set env[k]=true
+                        for (uFormula childFormula : gfp.getChildrenFormulas(uOperations.GFP)) {
+                            GFP innerGFP = (GFP) childFormula;
+                            e.setVariable(innerGFP.variable, new HashSet<>(lts.getStates()));
+                        }
+                }
+
+                HashSet<State> Xoldgfp;
+                do {
+                        Xoldgfp = e.getVariable(gfp.variable);
+                        e.setVariable(gfp.variable, evaluate(gfp.formula, lts, e));
+                } while (Xoldgfp.size() != e.getVariable(gfp.variable).size());
+                return e.getVariable(gfp.variable);
             default: 
                 System.out.println("Warning - unknown operator to evaluate: " + f.operator);
                 result = new HashSet<>();

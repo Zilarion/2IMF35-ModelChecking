@@ -11,6 +11,9 @@ public class Disjunction extends uFormula  {
         this.leftFormula = leftFormula;
         this.rightFormula = rightFormula;
         this.operator = uOperator.uOperations.OR;
+        
+        this.addChild(leftFormula);
+        this.addChild(rightFormula);
     }
     
     @Override

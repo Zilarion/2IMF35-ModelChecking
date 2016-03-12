@@ -11,6 +11,8 @@ public class Negation extends uFormula {
     public Negation(uFormula formula) {
         this.formula = formula;
         this.operator = uOperations.NEGATION;
+        
+        this.addChild(formula);
     }
     
     @Override

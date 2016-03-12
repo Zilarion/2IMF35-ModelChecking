@@ -14,6 +14,7 @@ public class Box extends uFormula {
         this.action = action;
         this.subFormula = subFormula;
         this.operator = uOperations.BOX;
+        this.addChild(subFormula);
     }
     
     @Override

@@ -31,18 +31,15 @@ public class ModelChecking {
      * @throws java.io.IOException
      */
     public static void main(String[] args) throws IOException {
-        AldebaranParser a = new AldebaranParser();
-        File file = new File("C:\\Users\\Hein\\Documents\\GitHub\\2IMF35-ModelChecking\\ModelChecking\\resources\\testcases\\modal_operators\\test.aut");
-        LTS lts = a.readFileLTS(file);
-        System.out.println(lts.toDot());
-        //new ModelChecking().run(args);
+        new ModelChecking().run();
+//        new ModelChecking().run(args);
     }
     
     public void run() {
         LTS lts = loadLTS("/Users/ruudandriessen/study/2imf35/2IMF35-ModelChecking/ModelChecking/resources/testcases/modal_operators/test.aut");
         while(true) {
             uFormula formula = getInputFunction();
-            HashSet<State> result = NaiveEvaluator.evaluate(formula, lts);
+            HashSet<State> result = EmersonLeiEvaluator.evaluate(formula, lts);
             System.out.println(result);
         }
     }
@@ -79,9 +76,9 @@ public class ModelChecking {
         uFormula function = loadFunction(inputFunction);
         HashSet<State> result = null;
         if (algorithm.equals("naive")) {
-            result = NaiveEvaluator.evaluate(function, lts, new Environment());
+            result = NaiveEvaluator.evaluate(function, lts);
         } else if (algorithm.equals("improved")) {
-            //result = NaiveEvaluator.evaluate(function, lts, new Environment());
+            result = EmersonLeiEvaluator.evaluate(function, lts);
         }
         writeOutput(result, output);
     }
