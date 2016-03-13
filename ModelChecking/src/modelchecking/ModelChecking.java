@@ -41,6 +41,8 @@ public class ModelChecking {
             uFormula formula = getInputFunction();
             HashSet<State> result = EmersonLeiEvaluator.evaluate(formula, lts);
             System.out.println(result);
+            HashSet<State> resultNaive = NaiveEvaluator.evaluate(formula, lts);
+            System.out.println(resultNaive);
         }
     }
 

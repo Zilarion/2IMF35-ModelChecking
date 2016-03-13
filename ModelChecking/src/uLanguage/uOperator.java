@@ -63,6 +63,7 @@ public class uOperator {
                 return op;
             }
         }
+        System.out.println("Warning no operator found for input: " + input);
         return null;
     }
 }

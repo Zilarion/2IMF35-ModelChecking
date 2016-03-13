@@ -5,8 +5,13 @@
  */
 package modelchecking;
 import java.util.HashSet;
+import uLanguage.Box;
+import uLanguage.Conjunction;
+import uLanguage.Diamond;
+import uLanguage.Disjunction;
 import uLanguage.GFP;
 import uLanguage.LFP;
+import uLanguage.Negation;
 import uLanguage.Variable;
 import uLanguage.Variable.Bound;
 import uLanguage.uFormula;
@@ -40,53 +45,103 @@ public class EmersonLeiEvaluator {
         switch (f.operator) {
             // All operations are the same except for LFP and GFP
             case FALSE:
+                // return Empty
+                result = new HashSet<>();
+                break;
             case TRUE:
+                // return S
+                result = lts.getStates();
+                break;
             case NEGATION:
+                // return S \ evaluate(!f)
+                HashSet<State> S = new HashSet<>(lts.getStates());
+                S.removeAll(evaluate(((Negation) f).formula, lts, e));
+                result = S;
+                break;
             case VARIABLE:
+                // Get the value of the variable
+                result = e.getVariable((Variable) f);
+                break;
             case AND:
+                // Return conjunction
+                Conjunction conjun = (Conjunction) f;
+                result = intersection(evaluate(conjun.leftFormula, lts, e), 
+                                    evaluate(conjun.rightFormula, lts, e));
+                break;
             case OR:
+                // Return union
+                Disjunction disjun = (Disjunction) f;
+                result = union(evaluate(disjun.leftFormula, lts, e), 
+                             evaluate(disjun.rightFormula, lts, e));
+                break;
             case DIAMOND:
+                // Instead of evaluating <a>f return evaluate([a]!f)
+                
+                // Create box and negate functions
+                Diamond diamond = (Diamond) f;
+                
+                Negation negatedSubFormula = new Negation(diamond.subFormula);  // !f
+                Box newBox = new Box(diamond.action, negatedSubFormula);        // [a]!f
+                Negation negatedNewBox = new Negation(newBox);                  // ![a]!f
+                 
+                // Evaluate box operation
+                result = evaluate(negatedNewBox, lts, e);
+                break;
             case BOX:
-                return NaiveEvaluator.evaluate(f, lts, e);
+                // Solve subform
+                Box box = (Box) f;
+                HashSet<State> subFormResult = evaluate(box.subFormula, lts, e);
+                HashSet<State> values = new HashSet<>(lts.getStates());
+                for (State s : lts.getStates()) {
+                    HashSet<Edge> edges = s.getEdgesWithLabel(box.action);
+                    for (Edge edge : edges) {
+                        if (!subFormResult.contains(edge.getEnd()))
+                            values.remove(s);
+                    }
+                }
+                result = values;      
+                break;
             case LFP:
                 LFP lfp = (LFP) f;
-                if (lfp.parent.operator == uOperations.LFP) {
-                        // reset open subformulae of form nu Xk.g set env[k]=true
-                        for (uFormula childFormula : lfp.getChildrenFormulas(uOperations.GFP)) {
-                            GFP innerGFP = (GFP) childFormula;
-                            e.setVariable(innerGFP.variable, new HashSet<>(lts.getStates()));
-                        }
+                if (lfp.parent != null && lfp.parent.operator == uOperations.LFP) {
+                    System.out.println("Resetting open subformula lfp");
+                    // reset open subformulae of form nu Xk.g set env[k]=true
+                    for (uFormula childFormula : lfp.getChildrenFormulas(uOperations.LFP)) {
+                        GFP innerGFP = (GFP) childFormula;
+                        e.setVariable(innerGFP.variable, new HashSet<>());
+                    }
                 }
 
                 HashSet<State> Xoldlfp;
                 do {
-                        Xoldlfp = e.getVariable(lfp.variable);
-                        e.setVariable(lfp.variable, evaluate(lfp.formula, lts, e));
+                    Xoldlfp = e.getVariable(lfp.variable);
+                    e.setVariable(lfp.variable, evaluate(lfp.formula, lts, e));
                 } while (Xoldlfp.size() != e.getVariable(lfp.variable).size());
-                return e.getVariable(lfp.variable);
+                result = e.getVariable(lfp.variable);
+                break;
             case GFP:
                 GFP gfp = (GFP) f;
-                if (gfp.parent.operator == uOperations.GFP) {
-                        // reset open subformulae of form nu Xk.g set env[k]=true
-                        for (uFormula childFormula : gfp.getChildrenFormulas(uOperations.GFP)) {
-                            GFP innerGFP = (GFP) childFormula;
-                            e.setVariable(innerGFP.variable, new HashSet<>(lts.getStates()));
-                        }
+                if (gfp.parent != null && gfp.parent.operator == uOperations.GFP) {
+                    System.out.println("Resetting open subformula gfp");
+                    // reset open subformulae of form nu Xk.g set env[k]=true
+                    for (uFormula childFormula : gfp.getChildrenFormulas(uOperations.GFP)) {
+                        GFP innerGFP = (GFP) childFormula;
+                        e.setVariable(innerGFP.variable, new HashSet<>(lts.getStates()));
+                    }
                 }
 
                 HashSet<State> Xoldgfp;
                 do {
-                        Xoldgfp = e.getVariable(gfp.variable);
-                        e.setVariable(gfp.variable, evaluate(gfp.formula, lts, e));
+                    Xoldgfp = e.getVariable(gfp.variable);
+                    e.setVariable(gfp.variable, evaluate(gfp.formula, lts, e));
                 } while (Xoldgfp.size() != e.getVariable(gfp.variable).size());
-                return e.getVariable(gfp.variable);
+                result = e.getVariable(gfp.variable);
+                break;
             default: 
                 System.out.println("Warning - unknown operator to evaluate: " + f.operator);
                 result = new HashSet<>();
                 break;
         }
-        System.out.println("Result: " + f.operator);
-//        System.out.println(result);
         return result;
     }
     

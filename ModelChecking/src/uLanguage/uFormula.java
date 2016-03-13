@@ -25,6 +25,7 @@ public abstract class uFormula {
     
     protected void addChild(uFormula f) {
         this.children.add(f);
+        f.setParent(this);
     }
     
     public Set<Variable> getVariables() {
