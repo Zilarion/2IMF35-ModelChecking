@@ -52,7 +52,7 @@ public class ModelChecking {
         String output = "";
         String algorithm = "";
         
-        for (int i=0; i<args.length; i++) {
+        for (int i = 0; i < args.length; i++) {
             switch(args[i]) {
                 case "-lts":
                     inputLTS = args[i+1];
@@ -70,7 +70,7 @@ public class ModelChecking {
                     algorithm = args[i+1];
                     i++;
                     break;
-                default: return;
+                default: break;
             }
         }
 
@@ -79,7 +79,7 @@ public class ModelChecking {
         HashSet<State> result = null;
         if (algorithm.equals("naive")) {
             result = NaiveEvaluator.evaluate(function, lts);
-        } else if (algorithm.equals("improved")) {
+        } else if (algorithm.equals("emerson")) {
             result = EmersonLeiEvaluator.evaluate(function, lts);
         }
         writeOutput(result, output);
@@ -111,10 +111,12 @@ public class ModelChecking {
             s = s.replaceAll("nu", "nu ");
             s = s.replaceAll("mu", "mu ");
             // Create function
-            formula = FormulaBuilder.buildFormula(s);
+            formula = FormulaBuilder.build(s);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ModelChecking.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
+            Logger.getLogger(ModelChecking.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (uParseException ex) {
             Logger.getLogger(ModelChecking.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
@@ -142,8 +144,13 @@ public class ModelChecking {
         // Except for mu/nu ones
         s = s.replaceAll("nu", "nu ");
         s = s.replaceAll("mu", "mu ");
-        // Create function
-        return FormulaBuilder.buildFormula(s);
+        
+        try {
+            return FormulaBuilder.build(s);
+        } catch (uParseException ex) {
+            Logger.getLogger(ModelChecking.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     public void writeOutput(HashSet<State> result, String path) {

@@ -4,8 +4,10 @@ package uLanguage;
  *
  * @author ruudandriessen
  */
-public class Disjunction extends uFormula  {
-    public uFormula leftFormula, rightFormula;
+public class Disjunction extends LogicOperator  {
+    public Disjunction() {
+        this.operator = uOperator.uOperations.OR;
+    }
     
     public Disjunction(uFormula leftFormula, uFormula rightFormula) {
         this.leftFormula = leftFormula;

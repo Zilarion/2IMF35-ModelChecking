@@ -30,6 +30,9 @@ public class EmersonLeiEvaluator {
     
     public static void init(uFormula f, LTS lts, Environment e) {
         for (Variable v : f.getVariables()) {
+            // TODO f.getVariables() still gets duplicates 
+            // this is okay since the environment works with strings but not ideal
+            // Especially with long formulas
             if (v.calculateBound(f)) {
                 if (v.boundBy == Bound.LFPBound) {
                     e.setVariable(v, new HashSet<>());
@@ -116,8 +119,8 @@ public class EmersonLeiEvaluator {
                 do {
                     Xoldlfp = e.getVariable(lfp.variable);
                     e.setVariable(lfp.variable, evaluate(lfp.formula, lts, e));
-                } while (Xoldlfp.size() != e.getVariable(lfp.variable).size());
-                result = e.getVariable(lfp.variable);
+                } while (!intersection(Xoldlfp, e.getVariable(lfp.variable)).equals(Xoldlfp));
+                result = e.getVariable(lfp.variable);     
                 break;
             case GFP:
                 GFP gfp = (GFP) f;
@@ -134,7 +137,7 @@ public class EmersonLeiEvaluator {
                 do {
                     Xoldgfp = e.getVariable(gfp.variable);
                     e.setVariable(gfp.variable, evaluate(gfp.formula, lts, e));
-                } while (Xoldgfp.size() != e.getVariable(gfp.variable).size());
+                } while (!intersection(Xoldgfp, e.getVariable(gfp.variable)).equals(Xoldgfp));
                 result = e.getVariable(gfp.variable);
                 break;
             default: 
