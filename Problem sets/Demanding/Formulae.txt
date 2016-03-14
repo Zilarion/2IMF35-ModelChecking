@@ -3,19 +3,19 @@ Non-trivial formulae for Demanding Children problem:
 
 1. In every state reachable by not asking a question, it is possible that the child never will have a question
 
-nu X. ((([i]X && ([others]X && ([wisdom]X && [playing]X ))) && nu Y.(<i>Y ||(<others>Y || (<wisdom>Y || <playing>Y )))))
+nu X. (([i]X && ([others]X && ([wisdom]X && [playing]X ))) && nu Y. (<i>Y ||(<others>Y || (<wisdom>Y || <playing>Y ))))
 
 
 ------------------------------------------------------------------------
 
 2. Invariantly, the child can ask a question in some future
 
-nu X. (([i]X && ([ask]X && ([wisdom]X && [playing]X ))) && mu Y. (((<i>Y || <wisdom>Y) || <playing>Y) || <ask>true ))
+nu X. (([i]X && ([others]X && ([ask]X && ([wisdom]X && [playing]X )))) && mu Y. ((((<i>Y || <others>Y) ||<wisdom>Y) || <playing>Y) || <ask>true ))
 
 
 ------------------------------------------------------------------------
 
-3. There is a course of events in which only the same child infinitely often loops the ask-wisdom-playing cycle
+3. There is a course of events in which only one child infinitely often loops the ask-wisdom-playing cycle
 
 nu X. mu Y. ( (((<ask>X || <wisdom>X) || <playing>X) || <i>Y) || <others>Y)
 
