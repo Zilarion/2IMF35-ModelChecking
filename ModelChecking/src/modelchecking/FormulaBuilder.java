@@ -31,7 +31,7 @@ public class FormulaBuilder {
     final static HashSet<Character> andOperatorFirstSet = new HashSet<>(Arrays.asList('&'));
     final static HashSet<Character> orOperatorFirstSet = new HashSet<>(Arrays.asList('|'));
     final static HashSet<Character> operatorSet = newHashSetUnion(andOperatorFirstSet, orOperatorFirstSet);
-    final static HashSet<Character> actionNameFirstSet = new HashSet<>(Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'));
+    final static HashSet<Character> actionNameFirstSet = new HashSet<>(Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2','3','4','5','6','7','8','9'));
     
     static Integer i;
     
@@ -224,6 +224,7 @@ public class FormulaBuilder {
     
     private static void expect(String s, String match) throws uParseException {
         if (!s.startsWith(match, i)) {
+            System.out.println(s.substring(i) + " != " + match);
             throw new uParseException();
         } else {
             i += match.length();
