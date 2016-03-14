@@ -13,8 +13,8 @@ import uLanguage.GFP;
 import uLanguage.LFP;
 import uLanguage.Negation;
 import uLanguage.Variable;
-import uLanguage.Variable.Bound;
 import uLanguage.uFormula;
+import uLanguage.uFormula.Bound;
 import uLanguage.uOperator.uOperations;
 
 /**
@@ -34,9 +34,9 @@ public class EmersonLeiEvaluator {
             // this is okay since the environment works with strings but not ideal
             // Especially with long formulas
             if (v.calculateBound(f)) {
-                if (v.boundBy == Bound.LFPBound) {
+                if (v.boundBy != null && v.boundBy .operator == uOperations.LFP) {
                     e.setVariable(v, new HashSet<>());
-                } else if (v.boundBy == Bound.GFPBound) {
+                } else if (v.boundBy != null && v.boundBy.operator == uOperations.GFP) {
                     e.setVariable(v, new HashSet<>(lts.getStates()));
                 }
             }
@@ -106,42 +106,47 @@ public class EmersonLeiEvaluator {
                 break;
             case LFP:
                 LFP lfp = (LFP) f;
-                if (lfp.parent != null && lfp.parent.operator == uOperations.LFP) {
-                    System.out.println("Resetting open subformula lfp");
-                    // reset open subformulae of form nu Xk.g set env[k]=true
+                if (lfp.getBinder() == Bound.GFPBound) {
+                    // Get all children LFPs
                     for (uFormula childFormula : lfp.getChildrenFormulas(uOperations.LFP)) {
-                        GFP innerGFP = (GFP) childFormula;
-                        e.setVariable(innerGFP.variable, new HashSet<>());
+                        LFP innerLFP = (LFP) childFormula;
+                        // Check if we have free variables and reset if we do
+                        if (innerLFP.freeVariables().size() > 0) {
+                            e.setVariable(innerLFP.variable, new HashSet<>());
+                        }
                     }
                 }
 
                 HashSet<State> Xoldlfp;
+                HashSet<State> intersectionLfp;
                 do {
                     Xoldlfp = e.getVariable(lfp.variable);
                     e.setVariable(lfp.variable, evaluate(lfp.formula, lts, e));
-                } while (!intersection(Xoldlfp, e.getVariable(lfp.variable)).equals(Xoldlfp));
+                    intersectionLfp = intersection(Xoldlfp, e.getVariable(lfp.variable));
+                } while (!(intersectionLfp.equals(Xoldlfp) && intersectionLfp.equals(e.getVariable(lfp.variable))));
                 result = e.getVariable(lfp.variable);     
                 break;
             case GFP:
                 GFP gfp = (GFP) f;
-                if (gfp.parent != null && gfp.parent.operator == uOperations.GFP) {
-                    System.out.println("Resetting open subformula gfp");
-                    // reset open subformulae of form nu Xk.g set env[k]=true
+                if (gfp.getBinder() == Bound.LFPBound) {
                     for (uFormula childFormula : gfp.getChildrenFormulas(uOperations.GFP)) {
                         GFP innerGFP = (GFP) childFormula;
-                        e.setVariable(innerGFP.variable, new HashSet<>(lts.getStates()));
+                        if (innerGFP.freeVariables().size() > 0) {
+                            e.setVariable(innerGFP.variable, new HashSet<>(lts.getStates()));
+                        }
                     }
                 }
 
                 HashSet<State> Xoldgfp;
+                HashSet<State> intersectionGfp;
                 do {
                     Xoldgfp = e.getVariable(gfp.variable);
                     e.setVariable(gfp.variable, evaluate(gfp.formula, lts, e));
-                } while (!intersection(Xoldgfp, e.getVariable(gfp.variable)).equals(Xoldgfp));
+                    intersectionGfp = intersection(Xoldgfp, e.getVariable(gfp.variable));
+                } while (!(intersectionGfp.equals(Xoldgfp) && intersectionGfp.equals(e.getVariable(gfp.variable))));
                 result = e.getVariable(gfp.variable);
                 break;
             default: 
-                System.out.println("Warning - unknown operator to evaluate: " + f.operator);
                 result = new HashSet<>();
                 break;
         }

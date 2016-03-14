@@ -3,7 +3,7 @@ Non-trivial formulae for Demanding Children problem:
 
 1. In every state reachable by not asking a question, it is possible that the child never will have a question
 
-nu X. (([i]X && ([others]X && ([wisdom]X && [playing]X ))) && nu Y. ((<i>Y || (<others>Y || (<wisdom>Y || <playing>Y )))))
+nu X. ((([i]X && ([others]X && ([wisdom]X && [playing]X ))) && nu Y.(<i>Y ||(<others>Y || (<wisdom>Y || <playing>Y )))))
 
 
 ------------------------------------------------------------------------

@@ -17,16 +17,16 @@ public abstract class LogicOperator extends uFormula {
     
     @Override
     public int getNestingDepth() {
-        return Math.max(leftFormula.getNestingDepth(), leftFormula.getNestingDepth());
+        return Math.max(leftFormula.getNestingDepth(), rightFormula.getNestingDepth());
     }
     
     @Override
     public int getAlternationDepth() {
-        return Math.max(leftFormula.getNestingDepth(), leftFormula.getNestingDepth());
+        return Math.max(leftFormula.getNestingDepth(), rightFormula.getNestingDepth());
     }
     
     @Override
     public int getDependentAlternationDepth() {
-        return Math.max(leftFormula.getNestingDepth(), leftFormula.getNestingDepth());
+        return Math.max(leftFormula.getNestingDepth(), rightFormula.getNestingDepth());
     }
 }

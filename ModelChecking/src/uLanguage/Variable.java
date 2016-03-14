@@ -9,9 +9,7 @@ import static uLanguage.uOperator.uOperations;
  */
 public class Variable extends uFormula {
     public String name;
-    
-    public enum Bound {LFPBound, GFPBound, NotBound};
-    public Bound boundBy;
+    public uFormula boundBy;
     
     public Variable(String name) {
         this.name = name;
@@ -21,17 +19,13 @@ public class Variable extends uFormula {
     public boolean calculateBound(uFormula f) {
         uFormula searchParent = this.parent;
         do {
-            if (searchParent.operator == uOperations.GFP) {
-                boundBy = Bound.GFPBound;
-                return true;
-            }
-            if (searchParent.operator == uOperations.LFP) {
-                boundBy = Bound.LFPBound;
+            if (searchParent.operator == uOperations.GFP || searchParent.operator == uOperations.LFP) {
+                boundBy = searchParent;
                 return true;
             }
             searchParent = searchParent.parent;
         } while (parent != f);
-        boundBy = Bound.NotBound;
+        boundBy = null;
         return false;
     }
     

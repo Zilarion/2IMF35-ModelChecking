@@ -17,7 +17,7 @@ public class Diamond extends uFormula {
     
     @Override
     public String toString() {
-        return "[" + action + "]" + subFormula;
+        return "<" + action + ">" + subFormula;
     }
     
     @Override

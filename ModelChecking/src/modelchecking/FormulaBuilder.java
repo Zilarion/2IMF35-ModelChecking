@@ -6,6 +6,7 @@ import uLanguage.Box;
 import uLanguage.Conjunction;
 import uLanguage.Diamond;
 import uLanguage.Disjunction;
+import uLanguage.FixedPoint;
 import uLanguage.GFP;
 import uLanguage.LFP;
 import uLanguage.LogicOperator;
@@ -89,8 +90,9 @@ public class FormulaBuilder {
     }
     
     private static Variable parseRecursionVariable(String s) {
+        Variable v = new Variable(Character.toString(s.charAt(i)));
         i += 1;
-        return new Variable(Character.toString(s.charAt(0)));
+        return v;
     }
     
     private static LogicOperator parseLogicFormula(String s) throws uParseException {
@@ -137,7 +139,7 @@ public class FormulaBuilder {
         return new Disjunction();
     }
     
-    private static uFormula parseMuFormula(String s) throws uParseException {
+    private static FixedPoint parseMuFormula(String s) throws uParseException {
         expect(s, "mu ");
         Variable r;
         uFormula f;
@@ -155,7 +157,7 @@ public class FormulaBuilder {
         return new LFP(r, f);
     }
     
-    private static uFormula parseNuFormula(String s) throws uParseException {
+    private static FixedPoint parseNuFormula(String s) throws uParseException {
         expect(s, "nu ");
         Variable r;
         uFormula f;

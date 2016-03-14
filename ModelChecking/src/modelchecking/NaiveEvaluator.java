@@ -88,22 +88,26 @@ public class NaiveEvaluator {
                 break;
             case LFP:
                 LFP lfp = (LFP) f;
-                e.setVariable(lfp.variable, new HashSet<>());
-                HashSet<State> Xlfp;
-                do {                 
-                    Xlfp = evaluate(lfp.formula, lts, e);
+                HashSet<State> Xlfp =  new HashSet<>();
+                HashSet<State> intersectionLfp;
+                do {
                     e.setVariable(lfp.variable, Xlfp);
-                } while(!intersection(Xlfp, e.getVariable(lfp.variable)).equals(Xlfp));
+                    Xlfp = evaluate(lfp.formula, lts, e);
+                    intersectionLfp = intersection(Xlfp, e.getVariable(lfp.variable));
+                } while (!(intersectionLfp.equals(Xlfp) && intersectionLfp.equals(e.getVariable(lfp.variable))));
+                e.setVariable(lfp.variable, Xlfp);
                 result = e.getVariable(lfp.variable);
                 break;
             case GFP:
                 GFP gfp = (GFP) f;
-                e.setVariable(gfp.variable, new HashSet<>(lts.getStates()));
-                HashSet<State> Xgfp;
+                HashSet<State> Xgfp = new HashSet<>(lts.getStates());
+                HashSet<State> intersectionGfp;
                 do {
-                    Xgfp = evaluate(gfp.formula, lts, e);
                     e.setVariable(gfp.variable, Xgfp);
-                } while (!intersection(Xgfp, e.getVariable(gfp.variable)).equals(Xgfp));
+                    Xgfp = evaluate(gfp.formula, lts, e);
+                    intersectionGfp = intersection(Xgfp, e.getVariable(gfp.variable));
+                } while (!(intersectionGfp.equals(Xgfp) && intersectionGfp.equals(e.getVariable(gfp.variable))));
+                e.setVariable(gfp.variable, Xgfp);
                 result = e.getVariable(gfp.variable);
                 break;
             default: 
