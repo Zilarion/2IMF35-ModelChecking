@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -62,21 +63,16 @@ public class AldebaranParser {
             State from = new State(m.group(1));
             String label = m.group(2);
             State to = new State(m.group(3));
-            HashSet<State> states = lts.getStates();
-            if (states.contains(to) || states.contains(from)) {
-                ArrayList<State> stateList = new ArrayList<>(states);
-                int toIndex = stateList.indexOf(to);
-                int fromIndex = stateList.indexOf(from);
-                if (toIndex >= 0) {
-                    to = stateList.get(toIndex);
-                }
-                if (fromIndex >= 0) {
-                    from = stateList.get(fromIndex);
-                }
+            HashMap<Integer,State> states = lts.getStates();
+            if (states.containsKey(to.getID())) {
+                to = states.get(to.getID());
+                
+            }
+            if (!states.containsKey(from.getID())) {
+                from = states.get(from.getID());
             }
             lts.addNode(to);
             lts.addNode(from);
-
             Edge edge = new Edge(from, label, to);
             HashSet edges = lts.getEdges();
             edges.add(edge);

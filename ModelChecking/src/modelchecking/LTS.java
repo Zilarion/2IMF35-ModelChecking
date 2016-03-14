@@ -17,14 +17,14 @@ public class LTS {
     private final int initialState;
     private final int absoluteEdges;
     private final HashSet<Edge> edgeSet;
-    private final HashSet<State> nodeSet;
+    private final HashMap<Integer,State> nodeMap;
 
     public LTS(String x, String y, String z) {
         this.initialState = Integer.parseInt(x);
         this.absoluteEdges = Integer.parseInt(y);
         int states = Integer.parseInt(z);
         this.edgeSet = new HashSet<>();
-        this.nodeSet = new HashSet<>(states);
+        this.nodeMap = new HashMap<>(states);
     }
 
     public int getInit() {
@@ -39,16 +39,16 @@ public class LTS {
         return this.edgeSet.size();
     }
 
-    public HashSet<State> getStates() {
-        return this.nodeSet;
+    public HashMap<Integer,State> getStates() {
+        return this.nodeMap;
     }
     
     public int getStateSize() {
-        return nodeSet.size();
+        return nodeMap.size();
     }
 
     public void addNode(State n) {
-        this.nodeSet.add(n);
+        this.nodeMap.put(n.getID(),n);
     }
     
     public int getAbsoluteEdgeCount() {
@@ -59,7 +59,7 @@ public class LTS {
     public String toString() {
         String init = "Initial state: " + this.initialState + "\n";
         String trans = "Nr of transitions: " + this.edgeSet.size() + "\n";
-        String stats = "Nr of states: " + this.nodeSet.size() + "\n";
+        String stats = "Nr of states: " + this.nodeMap.size() + "\n";
         String edges = "";
         for (Edge edge : this.edgeSet) {
             edges += edge.toString() + "\n";
