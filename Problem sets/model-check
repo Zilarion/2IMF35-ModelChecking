@@ -1,0 +1,20 @@
+#!/bin/bash
+
+#rm output.out
+for lts in *.aut; do
+	for f in *.mcf; do
+		for a in "naive" "emerson"; do
+			echo "-------------"
+			echo "Checking model with the following parameters:"
+			echo "LTS: $lts"
+			echo "Formula: $f"
+			echo "Algorithm: $a"
+			start=$(gdate +%s%N)
+			java -jar ~/study/2imf35/2IMF35-ModelChecking/ModelChecking/dist/ModelChecking.jar -lts $lts -alg $a -f $f -o ${lts%.*}-${f%.*}-${a}.out
+			duration=$(($(($(gdate +%s%N) - start))/1000000))
+			echo $duration
+		done
+	done
+done
+
+#java -jar ~/study/2imf35/2IMF35-ModelChecking/ModelChecking/dist/ModelChecking.jar 
