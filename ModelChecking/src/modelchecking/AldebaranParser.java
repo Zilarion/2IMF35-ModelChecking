@@ -47,14 +47,10 @@ public class AldebaranParser {
                         String edgeLine = br.readLine();
                         m = edgePattern.matcher(edgeLine);
                         parseLTS(lts, m);
-                        if (x % 10000 == 0)
-                        System.out.println("Parsed " + x + "/" + lts.getAbsoluteEdgeCount());
                     }
-//                    System.out.println("Parsed edges");
                 }
             }
         }
-        System.out.println("Done");
         return lts;
     }
     

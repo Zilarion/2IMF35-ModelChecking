@@ -31,12 +31,11 @@ public class ModelChecking {
      * @throws java.io.IOException
      */
     public static void main(String[] args) throws IOException {
-        new ModelChecking().run();
-//        new ModelChecking().run(args);
+//        new ModelChecking().run();
+        new ModelChecking().run(args);
     }
     
     public void run() {
-//        LTS lts = loadLTS("/Users/ruudandriessen/study/2imf35/2IMF35-ModelChecking/ModelChecking/resources/testcases/modal_operators/test.aut");
         LTS lts = loadLTS("/Users/ruudandriessen/study/2imf35/2IMF35-ModelChecking/Problem sets/Demanding/demanding_children_2.aut");
         while(true) {
             uFormula formula = getInputFunction();
@@ -85,13 +84,23 @@ public class ModelChecking {
 
         LTS lts = loadLTS(inputLTS);
         uFormula function = loadFunction(inputFunction);
+        if (function == null) {
+            return;
+        }
         HashSet<State> result = null;
         if (algorithm.equals("naive")) {
             result = NaiveEvaluator.evaluate(function, lts);
         } else if (algorithm.equals("emerson")) {
             result = EmersonLeiEvaluator.evaluate(function, lts);
         }
-        writeOutput(result, output);
+        if (!output.equals("")) {
+            writeOutput(result, output);
+        } else {
+            System.out.println("-------------------");
+            System.out.println("LTS: " + inputLTS);
+            System.out.println("F: " + function);
+            System.out.println("Result: " + result);
+        }
     }
 
     public LTS loadLTS(String path) {
@@ -113,12 +122,17 @@ public class ModelChecking {
         try {
             File file = new File(path);
             br = new BufferedReader(new FileReader(file));
-            String s = br.readLine();
-            // Strip all spaces
-            s = s.replaceAll("\\s+", "");
-            // Except for mu/nu ones
-            s = s.replaceAll("nu", "nu ");
-            s = s.replaceAll("mu", "mu ");
+            String s = "";
+            for (String line = br.readLine(); line != null; line = br.readLine()) {
+                line = line.replaceAll("% [\\S\\s]+", "");
+                line = line.replaceAll("% [\\S\\s]+", "");
+                line = line.replaceAll("\r+", "");
+                line = line.replaceAll("\n+", "");
+                line = line.replaceAll(" ", "");
+                line = line.replaceAll("nu", "nu ");
+                line = line.replaceAll("mu", "mu ");
+                s += line;
+            }
             // Create function
             formula = FormulaBuilder.build(s);
         } catch (FileNotFoundException ex) {
@@ -167,6 +181,7 @@ public class ModelChecking {
         try {
             writer = new PrintWriter(path, "UTF-8");
             writer.println(result);
+            System.out.println("Wrote output to: " + path);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ModelChecking.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnsupportedEncodingException ex) {
