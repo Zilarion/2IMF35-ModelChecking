@@ -37,7 +37,7 @@ public class ModelChecking {
     
     public void run() {
 //        LTS lts = loadLTS("/Users/ruudandriessen/study/2imf35/2IMF35-ModelChecking/ModelChecking/resources/testcases/modal_operators/test.aut");
-        LTS lts = loadLTS("/Users/ruudandriessen/study/2imf35/2IMF35-ModelChecking/Problem sets/Dining/dining_2.aut");
+        LTS lts = loadLTS("/Users/ruudandriessen/study/2imf35/2IMF35-ModelChecking/Problem sets/Demanding/demanding_children_2.aut");
         while(true) {
             uFormula formula = getInputFunction();
             System.out.println("Formula information:");
