@@ -49,4 +49,8 @@ public abstract class uFormula {
         }
         return matches;
     }
+    
+    public abstract int getNestingDepth();
+    public abstract int getAlternationDepth();
+    public abstract int getDependentAlternationDepth();
 }
