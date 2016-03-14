@@ -2,4 +2,4 @@
 % She has a strategy so that all plays that start in position (0,0)
 % are won by player II (i.e. regardless of how player I plays)
 
-mu X. (([choose1]X && [choose2]X) || <won>false )
+mu X. (([choose1]X && [choose2]X) || <won>true )
