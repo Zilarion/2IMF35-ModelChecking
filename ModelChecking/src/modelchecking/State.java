@@ -15,9 +15,9 @@ public class State {
     private final int id;
     private final HashSet<Edge> outgoingEdges;
     
-    public State(String n) {
-        this.id = Integer.parseInt(n);
-        this.outgoingEdges = new HashSet();
+    public State(Integer nId) {
+        this.id = nId;
+        this.outgoingEdges = new HashSet<>();
     }
     
     public void addEdge(Edge e) {

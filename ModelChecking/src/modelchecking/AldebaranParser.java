@@ -38,6 +38,7 @@ public class AldebaranParser {
     public LTS readFileLTS(File file) throws FileNotFoundException, IOException {
         LTS lts = null;
         int i = 0;
+        HashMap<Integer, State> states = new HashMap<>();
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             for (String line; (line = br.readLine()) != null;) {
                 Matcher m = initPattern.matcher(line);
@@ -46,33 +47,42 @@ public class AldebaranParser {
                     for (int x = 0; x < lts.getAbsoluteEdgeCount(); x++) {
                         String edgeLine = br.readLine();
                         m = edgePattern.matcher(edgeLine);
-                        parseLTS(lts, m);
+                        parseLTS(lts, states, m);
                     }
                 }
             }
         }
+        
+        if (lts == null ) return lts;
+        
+        for (State s : states.values()) {
+            lts.addNode(s);
+        }
         return lts;
     }
     
-    private LTS parseLTS(LTS lts, Matcher m) {
+    private LTS parseLTS(LTS lts, HashMap<Integer, State> states, Matcher m) throws IOException {
         if (m.find()) {
-            State from = new State(m.group(1));
+            int fromID = Integer.parseInt(m.group(1));
             String label = m.group(2);
-            State to = new State(m.group(3));
-            HashMap<Integer,State> states = lts.getStates();
-            if (states.containsKey(to.getID())) {
-                to = states.get(to.getID());
-                
+            int toID = Integer.parseInt(m.group(3));
+            State from, to;
+            if (states.containsKey(toID)) {
+                to = states.get(toID);
+            } else {
+                to = new State(toID);
+                states.put(toID, to);
             }
-            if (!states.containsKey(from.getID())) {
-                from = states.get(from.getID());
+            if (states.containsKey(fromID)) {
+                from = states.get(fromID);
+            } else {
+                from = new State(fromID);
+                states.put(fromID, from);
             }
-            lts.addNode(to);
-            lts.addNode(from);
             Edge edge = new Edge(from, label, to);
-            HashSet edges = lts.getEdges();
+            HashSet<Edge> edges = lts.getEdges();
             edges.add(edge);
-
+            
             from.getOutEdges().add(edge);
         }
         return lts;

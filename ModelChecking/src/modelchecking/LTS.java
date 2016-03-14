@@ -5,7 +5,6 @@
  */
 package modelchecking;
 
-import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -17,14 +16,14 @@ public class LTS {
     private final int initialState;
     private final int absoluteEdges;
     private final HashSet<Edge> edgeSet;
-    private final HashMap<Integer,State> nodeMap;
+    private final HashSet<State> nodeSet;
 
     public LTS(String x, String y, String z) {
         this.initialState = Integer.parseInt(x);
         this.absoluteEdges = Integer.parseInt(y);
         int states = Integer.parseInt(z);
         this.edgeSet = new HashSet<>();
-        this.nodeMap = new HashMap<>(states);
+        this.nodeSet = new HashSet<>(states);
     }
 
     public int getInit() {
@@ -39,16 +38,16 @@ public class LTS {
         return this.edgeSet.size();
     }
 
-    public HashMap<Integer,State> getStates() {
-        return this.nodeMap;
+    public HashSet<State> getStates() {
+        return this.nodeSet;
     }
     
     public int getStateSize() {
-        return nodeMap.size();
+        return nodeSet.size();
     }
 
     public void addNode(State n) {
-        this.nodeMap.put(n.getID(),n);
+        this.nodeSet.add(n);
     }
     
     public int getAbsoluteEdgeCount() {
@@ -59,7 +58,7 @@ public class LTS {
     public String toString() {
         String init = "Initial state: " + this.initialState + "\n";
         String trans = "Nr of transitions: " + this.edgeSet.size() + "\n";
-        String stats = "Nr of states: " + this.nodeMap.size() + "\n";
+        String stats = "Nr of states: " + this.nodeSet.size() + "\n";
         String edges = "";
         for (Edge edge : this.edgeSet) {
             edges += edge.toString() + "\n";

@@ -5,7 +5,6 @@
  */
 package modelchecking;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import uLanguage.Box;
 import uLanguage.Conjunction;
@@ -28,11 +27,11 @@ public class NaiveEvaluator {
     }
     
     public static HashSet<State> evaluate(uFormula f, LTS lts, Environment e) {
-        HashMap<Integer,State> result;
+        HashSet<State> result;
         switch (f.operator) {
             case FALSE:
                 // return Empty
-                result = new HashMap<>();
+                result = new HashSet<>();
                 break;
             case TRUE:
                 // return S
@@ -40,7 +39,7 @@ public class NaiveEvaluator {
                 break;
             case NEGATION:
                 // return S \ evaluate(!f)
-                HashMap<Integer,State> S = new HashMap<>(lts.getStates());
+                HashSet<State> S = new HashSet<>(lts.getStates());
                 S.removeAll(evaluate(((Negation) f).formula, lts, e));
                 result = S;
                 break;
@@ -116,8 +115,6 @@ public class NaiveEvaluator {
                 result = new HashSet<>();
                 break;
         }
-//        System.out.println("Result: " + f.operator);
-//        System.out.println(result);
         return result;
     }
     
