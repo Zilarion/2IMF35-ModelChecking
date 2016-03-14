@@ -14,4 +14,19 @@ public abstract class LogicOperator extends uFormula {
         this.addChild(leftFormula);
         this.addChild(rightFormula);
     }
+    
+    @Override
+    public int getNestingDepth() {
+        return Math.max(leftFormula.getNestingDepth(), leftFormula.getNestingDepth());
+    }
+    
+    @Override
+    public int getAlternationDepth() {
+        return Math.max(leftFormula.getNestingDepth(), leftFormula.getNestingDepth());
+    }
+    
+    @Override
+    public int getDependentAlternationDepth() {
+        return Math.max(leftFormula.getNestingDepth(), leftFormula.getNestingDepth());
+    }
 }

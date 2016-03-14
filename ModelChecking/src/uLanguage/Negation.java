@@ -19,4 +19,19 @@ public class Negation extends uFormula {
     public String toString() {
         return "!(" + formula + ")";
     }
+    
+    @Override
+    public int getNestingDepth() {
+        return 0;
+    }
+    
+    @Override
+    public int getAlternationDepth() {
+        return 0;
+    }
+    
+    @Override
+    public int getDependentAlternationDepth() {
+        return 0;
+    }
 }

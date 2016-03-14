@@ -21,4 +21,19 @@ public class Box extends uFormula {
     public String toString() {
         return "[" + action + "]" + subFormula;
     }
+
+    @Override
+    public int getNestingDepth() {
+        return subFormula.getNestingDepth();
+    }
+
+    @Override
+    public int getAlternationDepth() {
+        return subFormula.getAlternationDepth();
+    }
+
+    @Override
+    public int getDependentAlternationDepth() {
+        return subFormula.getDependentAlternationDepth();
+    }
 }

@@ -17,5 +17,20 @@ public class Proposition extends uFormula {
     public String toString() {
         return value ? "true" : "false";
     }
+    
+    @Override
+    public int getNestingDepth() {
+        return 0;
+    }
+
+    @Override
+    public int getAlternationDepth() {
+        return 0;
+    }
+
+    @Override
+    public int getDependentAlternationDepth() {
+        return 0;
+    }
 }
 

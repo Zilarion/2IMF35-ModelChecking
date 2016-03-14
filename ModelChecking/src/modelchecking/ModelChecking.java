@@ -39,9 +39,16 @@ public class ModelChecking {
         LTS lts = loadLTS("/Users/ruudandriessen/study/2imf35/2IMF35-ModelChecking/ModelChecking/resources/testcases/modal_operators/test.aut");
         while(true) {
             uFormula formula = getInputFunction();
+            System.out.println("Formula information:");
+            System.out.println("ND: " + formula.getNestingDepth());
+            System.out.println("AD: " + formula.getAlternationDepth());
+            System.out.println("dAD: " + formula.getDependentAlternationDepth());
+            System.out.println("--------- Processing ----------");
             HashSet<State> result = EmersonLeiEvaluator.evaluate(formula, lts);
+            System.out.println("Emerson lei:");
             System.out.println(result);
             HashSet<State> resultNaive = NaiveEvaluator.evaluate(formula, lts);
+            System.out.println("Naive:");
             System.out.println(resultNaive);
         }
     }

@@ -1,5 +1,6 @@
 package uLanguage;
 
+import java.util.Objects;
 import static uLanguage.uOperator.uOperations;
 
 /**
@@ -8,6 +9,7 @@ import static uLanguage.uOperator.uOperations;
  */
 public class Variable extends uFormula {
     public String name;
+    
     public enum Bound {LFPBound, GFPBound, NotBound};
     public Bound boundBy;
     
@@ -46,5 +48,39 @@ public class Variable extends uFormula {
     @Override
     public String toString() {
         return name;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!Variable.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+        final Variable other = (Variable) obj;
+        return this.name.equals(other.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + Objects.hashCode(this.name);
+        return hash;
+    }
+    
+    @Override
+    public int getNestingDepth() {
+        return 0;
+    }
+    
+    @Override
+    public int getAlternationDepth() {
+        return 0;
+    }
+
+    @Override
+    public int getDependentAlternationDepth() {
+        return 0;
     }
 }
