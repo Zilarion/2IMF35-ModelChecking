@@ -51,7 +51,7 @@ public class NaiveEvaluator {
                 // Return conjunction
                 Conjunction conjun = (Conjunction) f;
                 result = intersection(evaluate(conjun.leftFormula, lts, e), 
-                                    evaluate(conjun.leftFormula, lts, e));
+                                    evaluate(conjun.rightFormula, lts, e));
                 break;
             case OR:
                 // Return union
@@ -88,23 +88,23 @@ public class NaiveEvaluator {
                 break;
             case LFP:
                 LFP lfp = (LFP) f;
-                result = new HashSet<>();
+                e.setVariable(lfp.variable, new HashSet<>());
+                HashSet<State> Xlfp;
                 do {                 
-                    e.setVariable(lfp.variable, result);
-                    result = evaluate(lfp.formula, lts, e);
-                } while(!intersection(result, e.getVariable(lfp.variable)).equals(result));
-                
-                e.setVariable(lfp.variable, result);
+                    Xlfp = evaluate(lfp.formula, lts, e);
+                    e.setVariable(lfp.variable, Xlfp);
+                } while(!intersection(Xlfp, e.getVariable(lfp.variable)).equals(Xlfp));
+                result = e.getVariable(lfp.variable);
                 break;
             case GFP:
                 GFP gfp = (GFP) f;
-                result = new HashSet<>(lts.getStates());
+                e.setVariable(gfp.variable, new HashSet<>(lts.getStates()));
+                HashSet<State> Xgfp;
                 do {
-                    e.setVariable(gfp.variable, result);
-                    result = evaluate(gfp.formula, lts, e);
-                } while (!intersection(result, e.getVariable(gfp.variable)).equals(result));
-                
-                e.setVariable(gfp.variable, result);
+                    Xgfp = evaluate(gfp.formula, lts, e);
+                    e.setVariable(gfp.variable, Xgfp);
+                } while (!intersection(Xgfp, e.getVariable(gfp.variable)).equals(Xgfp));
+                result = e.getVariable(gfp.variable);
                 break;
             default: 
                 System.out.println("Warning - unknown operator to evaluate: " + f.operator);

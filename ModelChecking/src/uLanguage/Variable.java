@@ -20,11 +20,11 @@ public class Variable extends uFormula {
         uFormula searchParent = this.parent;
         do {
             if (searchParent.operator == uOperations.GFP) {
-                boundBy = Bound.LFPBound;
+                boundBy = Bound.GFPBound;
                 return true;
             }
             if (searchParent.operator == uOperations.LFP) {
-                boundBy = Bound.GFPBound;
+                boundBy = Bound.LFPBound;
                 return true;
             }
             searchParent = searchParent.parent;

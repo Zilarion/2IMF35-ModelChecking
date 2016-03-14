@@ -30,6 +30,9 @@ public abstract class uFormula {
     
     public Set<Variable> getVariables() {
         Set<Variable> variables = new HashSet<>();
+        if (this.operator == uOperations.VARIABLE) {
+            variables.add((Variable) this);
+        }
         for (uFormula f : children) {
             variables.addAll(f.getVariables());
         }

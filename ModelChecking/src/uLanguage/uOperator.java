@@ -21,8 +21,8 @@ public class uOperator {
     static Pattern truePattern = Pattern.compile("^[\\s]*true[\\s]*$");
     static Pattern variablePattern = Pattern.compile("^[\\s]*([A-Z])[\\s]*$");
     static Pattern actionPattern = Pattern.compile("^[\\s]*[a-z]*[\\s]*$");
-    static Pattern andPattern = Pattern.compile("^\\(([\\S\\s]+)\\&\\&([^\\)]+)\\)$|^\\(([^\\(]+)\\&\\&([\\S\\s]+)\\)$");
-    static Pattern orPattern = Pattern.compile("^\\(([\\S\\s]+)\\|\\|([^\\)]+)\\)$|^\\(([^\\(]+)\\|\\|([\\S\\s]+)\\)$");
+    static Pattern andPattern = Pattern.compile("^\\(([\\S\\s]+)\\&\\&([\\S\\s]+)\\)$");
+    static Pattern orPattern = Pattern.compile("^\\(([\\S\\s]+)\\|\\|([\\S\\s]+)\\)$");
     static Pattern diamondPattern = Pattern.compile("^\\<([a-z]+)\\>([\\s\\S]+)$");
     static Pattern boxPattern = Pattern.compile("^\\[([a-z]+)\\]([\\s\\S]+)$");
     static Pattern lfpPattern = Pattern.compile("^mu ([A-Z]).([\\s\\S]+)$");

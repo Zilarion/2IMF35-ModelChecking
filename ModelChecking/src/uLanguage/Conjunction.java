@@ -4,8 +4,11 @@ package uLanguage;
  *
  * @author ruudandriessen
  */
-public class Conjunction extends uFormula {
-    public uFormula leftFormula, rightFormula;
+public class Conjunction extends LogicOperator {
+    
+    public Conjunction() {
+        this.operator = uOperator.uOperations.AND;
+    }
     
     public Conjunction(uFormula leftFormula, uFormula rightFormula) {
         this.leftFormula = leftFormula;
@@ -14,7 +17,7 @@ public class Conjunction extends uFormula {
         
         this.addChild(leftFormula);
         this.addChild(rightFormula);
-    }    
+    }
     
     @Override
     public String toString() {
