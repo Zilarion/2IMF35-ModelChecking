@@ -1,0 +1,3 @@
+% In every state reachable by asking a question, the child will eventually get an answer and return to playing mode
+
+nu X. ([ask]X && mu Y. ((<wisdom>true || <i>Y) && mu Z. (<playing>true || <i>Z )) )
