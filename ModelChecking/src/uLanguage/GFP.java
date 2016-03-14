@@ -7,9 +7,7 @@ import uLanguage.uOperator.uOperations;
  *
  * @author ruudandriessen
  */
-public class GFP extends uFormula {
-    public Variable variable;
-    public uFormula formula;
+public class GFP extends FixedPoint {
     
     public GFP(Variable variable, uFormula formula) {
         this.variable = variable;
@@ -24,15 +22,9 @@ public class GFP extends uFormula {
     public String toString() {
         return "nu " + variable + "." + formula;
     }
-    
-    @Override
-    public int getNestingDepth() {
-        return formula.getNestingDepth() + 1;
-    }
-
     @Override
     public int getAlternationDepth() {
-        int max = -1;
+        int max = 0;
         for (uFormula f : this.getChildrenFormulas(uOperations.LFP)) {
             int ad = f.getAlternationDepth();
             if (ad > max) {

@@ -34,23 +34,9 @@ public class AldebaranParser {
         this.edgePattern = Pattern.compile("\\(([0-9])+,\\\"([0-9a-zA-Z, ()]*)\\\",([0-9]+)\\)");
     }
 
-    public LTS readLTS() {
-        LTS lts = null;
-        String init = scanner.nextLine();
-        Matcher m = initPattern.matcher(init);
-        if (m.find()) {
-            lts = new LTS(m.group(1), m.group(2), m.group(3));
-            for (int x = 0; x < lts.getAbsoluteEdgeCount(); x++) {
-                String edgeLine = scanner.nextLine();
-                m = edgePattern.matcher(edgeLine);
-                parseLTS(lts, m);
-            }
-        }
-        return lts;
-    }
-
     public LTS readFileLTS(File file) throws FileNotFoundException, IOException {
         LTS lts = null;
+        int i = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             for (String line; (line = br.readLine()) != null;) {
                 Matcher m = initPattern.matcher(line);
@@ -60,10 +46,14 @@ public class AldebaranParser {
                         String edgeLine = br.readLine();
                         m = edgePattern.matcher(edgeLine);
                         parseLTS(lts, m);
+                        if (x % 10000 == 0)
+                        System.out.println("Parsed " + x + "/" + lts.getAbsoluteEdgeCount());
                     }
+//                    System.out.println("Parsed edges");
                 }
             }
         }
+        System.out.println("Done");
         return lts;
     }
     

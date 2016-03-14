@@ -36,10 +36,12 @@ public class ModelChecking {
     }
     
     public void run() {
-        LTS lts = loadLTS("/Users/ruudandriessen/study/2imf35/2IMF35-ModelChecking/ModelChecking/resources/testcases/modal_operators/test.aut");
+//        LTS lts = loadLTS("/Users/ruudandriessen/study/2imf35/2IMF35-ModelChecking/ModelChecking/resources/testcases/modal_operators/test.aut");
+        LTS lts = loadLTS("/Users/ruudandriessen/study/2imf35/2IMF35-ModelChecking/Problem sets/Dining/dining_2.aut");
         while(true) {
             uFormula formula = getInputFunction();
             System.out.println("Formula information:");
+            System.out.println("Input: " + formula);
             System.out.println("ND: " + formula.getNestingDepth());
             System.out.println("AD: " + formula.getAlternationDepth());
             System.out.println("dAD: " + formula.getDependentAlternationDepth());

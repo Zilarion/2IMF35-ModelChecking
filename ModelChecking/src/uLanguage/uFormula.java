@@ -11,6 +11,8 @@ import uLanguage.uOperator.uOperations;
  * @author ruudandriessen
  */
 public abstract class uFormula {
+    public enum Bound {LFPBound, GFPBound, NotBound};
+    
     public uFormula parent;
     public uOperations operator;
     public List<uFormula> children;
@@ -20,7 +22,7 @@ public abstract class uFormula {
     }
     
     public void setParent(uFormula parent) {
-        this.parent = parent;
+        this.parent = parent;  
     }
     
     protected void addChild(uFormula f) {
@@ -37,6 +39,21 @@ public abstract class uFormula {
             variables.addAll(f.getVariables());
         }
         return variables;
+    }
+    
+    public Bound getBinder() {
+        uFormula searchParent = this.parent;
+        while (searchParent != null) {
+            if (searchParent.operator == uOperations.GFP) {
+                return Bound.GFPBound;
+            }
+            if (searchParent.operator == uOperations.LFP) {
+                return Bound.LFPBound;
+            }
+            
+            searchParent = searchParent.parent;
+        }
+        return Bound.NotBound;
     }
     
     public List<uFormula> getChildrenFormulas(uOperations op) {
