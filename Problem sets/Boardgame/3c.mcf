@@ -3,4 +3,4 @@
 % are won by player II (i.e. regardless of how player I plays).
 % She wins a play iff she infinitely often manoevres the token to position (N,N)
 
-mu X. (([choose1]X && [choose2]X) || ([choose1]<won>false || [choose2]<won>false ))
+mu X. ([choose1]X && [choose2]X) || nu Y. ([choose2]<won>Y )
